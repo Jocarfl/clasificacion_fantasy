@@ -101,11 +101,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
       
       {/* Header */}
       <div>
-        <h2 className="font-display text-xl font-bold text-slate-100 flex items-center gap-2">
+        <h2 className="font-display text-xl font-black text-white flex items-center gap-2">
           <PieChart className="w-5 h-5 text-amber-400" />
           <span>Estadísticas y Análisis del Bote</span>
         </h2>
-        <p className="text-xs text-slate-400 mt-0.5">
+        <p className="text-xs text-slate-300 font-medium mt-0.5">
           Distribución de pagos, contadores de sanciones y récords del grupo
         </p>
       </div>
@@ -114,54 +114,54 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         
         {/* 1. Rey del Farolillo Rojo (3€) */}
-        <div className="rounded-2xl bg-gradient-to-br from-red-500/10 via-slate-900 to-slate-900 border border-red-500/25 p-4 flex items-center gap-3 shadow-md">
-          <div className="w-12 h-12 rounded-2xl bg-red-500/20 text-red-400 flex items-center justify-center text-xl flex-shrink-0 border border-red-500/30">
-            <Flame className="w-6 h-6" />
+        <div className="rounded-2xl bg-surface-card border-2 border-red-500/40 p-4 flex items-center gap-3 shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-red-500/25 text-red-300 flex items-center justify-center text-xl flex-shrink-0 border border-red-500/50">
+            <Flame className="w-6 h-6 text-red-400" />
           </div>
           <div className="min-w-0">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-red-400 block">
+            <span className="text-[10px] uppercase font-black tracking-wider text-red-300 block">
               Rey del 3€ (Último)
             </span>
-            <strong className="font-display text-base font-bold text-slate-100 truncate block">
+            <strong className="font-display text-base font-black text-white truncate block">
               {kingOf3.length > 0 ? kingOf3.map(p => p.name).join(', ') : 'Nadie'}
             </strong>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-300 font-medium">
               {max3Count > 0 ? `${max3Count} veces en el pozo (9º)` : '0 veces'}
             </span>
           </div>
         </div>
 
         {/* 2. El Muro (0€ Pagados) */}
-        <div className="rounded-2xl bg-gradient-to-br from-emerald-500/10 via-slate-900 to-slate-900 border border-emerald-500/25 p-4 flex items-center gap-3 shadow-md">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/30">
-            <ShieldCheck className="w-6 h-6" />
+        <div className="rounded-2xl bg-surface-card border-2 border-emerald-500/40 p-4 flex items-center gap-3 shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-500/25 text-emerald-300 flex items-center justify-center text-xl flex-shrink-0 border border-emerald-500/50">
+            <ShieldCheck className="w-6 h-6 text-emerald-400" />
           </div>
           <div className="min-w-0">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-400 block">
+            <span className="text-[10px] uppercase font-black tracking-wider text-emerald-300 block">
               Invictos a 0.00€
             </span>
-            <strong className="font-display text-base font-bold text-slate-100 truncate block">
+            <strong className="font-display text-base font-black text-white truncate block">
               {cleanPlayers.length > 0 ? cleanPlayers.map(p => p.name).join(', ') : 'Ninguno'}
             </strong>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-300 font-medium">
               {cleanPlayers.length} participante(s) sin multas
             </span>
           </div>
         </div>
 
         {/* 3. Total Multas Aplicadas */}
-        <div className="rounded-2xl bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/25 p-4 flex items-center gap-3 shadow-md">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/30">
-            <Coins className="w-6 h-6" />
+        <div className="rounded-2xl bg-surface-card border-2 border-amber-500/40 p-4 flex items-center gap-3 shadow-lg">
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/25 text-amber-300 flex items-center justify-center text-xl flex-shrink-0 border border-amber-500/50">
+            <Coins className="w-6 h-6 text-amber-400" />
           </div>
           <div className="min-w-0">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 block">
+            <span className="text-[10px] uppercase font-black tracking-wider text-amber-300 block">
               Total Recaudación
             </span>
-            <strong className="font-display text-base font-bold text-slate-100 truncate block">
+            <strong className="font-display text-base font-black text-white truncate block">
               {globalStats.totalPot.toFixed(2)}€ Recaudados
             </strong>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-slate-300 font-medium">
               {totalPenaltiesGiven} sanciones en {globalStats.computedJourneys} fechas
             </span>
           </div>
@@ -170,18 +170,18 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
       </div>
 
       {/* Section 1: Reparto del Bote Acumulado (Donut + Progress Cards) */}
-      <div className="rounded-2xl bg-surface/90 border border-surface-border p-5 sm:p-6 shadow-md">
+      <div className="rounded-2xl bg-surface-card border border-surface-border p-5 sm:p-6 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
           <div>
-            <h3 className="font-display text-lg font-bold text-slate-100 flex items-center gap-2">
+            <h3 className="font-display text-lg font-black text-white flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-amber-400" />
               <span>Reparto Detallado del Bote</span>
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300 font-medium">
               Contribución exacta de cada participante al fondo común
             </p>
           </div>
-          <span className="text-xs px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-400 font-bold self-start sm:self-auto">
+          <span className="text-xs px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 font-black self-start sm:self-auto shadow-sm">
             {globalStats.totalPot.toFixed(2)}€ Bote Actual
           </span>
         </div>
@@ -193,9 +193,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
             <div className="h-56 w-56 sm:h-64 sm:w-64 relative flex items-center justify-center">
               <Doughnut data={donutData} options={donutOptions} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Total</span>
-                <span className="font-display text-2xl font-extrabold text-white">{globalStats.totalPot.toFixed(2)}€</span>
-                <span className="text-[10px] text-emerald-400 font-medium">{globalStats.progressPercent.toFixed(1)}% est.</span>
+                <span className="text-[10px] uppercase tracking-wider text-slate-300 font-black">Total</span>
+                <span className="font-display text-3xl font-black text-white">{globalStats.totalPot.toFixed(2)}€</span>
+                <span className="text-xs text-emerald-400 font-bold">{globalStats.progressPercent.toFixed(1)}% est.</span>
               </div>
             </div>
           </div>
@@ -209,26 +209,26 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
               return (
                 <div
                   key={player.id}
-                  className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition-colors"
+                  className="p-3 rounded-xl bg-slate-900 border border-slate-700/80 hover:border-slate-500 transition-colors shadow-sm"
                 >
                   <div className="flex items-center justify-between text-xs mb-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: player.totalPaid > 0 ? color : '#334155' }} />
-                      <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                      <span className="w-3 h-3 rounded-full" style={{ backgroundColor: player.totalPaid > 0 ? color : '#475569' }} />
+                      <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-black text-[10px] text-white">
                         {player.name.slice(0, 2).toUpperCase()}
                       </div>
-                      <span className="font-bold text-slate-200">{player.name}</span>
+                      <span className="font-bold text-white">{player.name}</span>
                       {player.rank === 1 && player.totalPaid > 0 && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-extrabold">LÍDER</span>
+                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-black">LÍDER</span>
                       )}
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="font-display font-bold text-slate-100">{player.totalPaid.toFixed(2)}€</span>
-                      <span className="text-[11px] font-mono text-slate-400 w-12 text-right">{pct.toFixed(1)}%</span>
+                      <span className="font-display font-black text-white text-sm">{player.totalPaid.toFixed(2)}€</span>
+                      <span className="text-xs font-mono font-bold text-amber-300 w-12 text-right">{pct.toFixed(1)}%</span>
                     </div>
                   </div>
                   {/* Progress Bar */}
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden border border-slate-700">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{
@@ -245,58 +245,58 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
         </div>
       </div>
 
-      {/* Section 2: Desglose de Sanciones por Jugador (Reemplazo de la gráfica confusa) */}
-      <div className="rounded-2xl bg-surface/90 border border-surface-border p-5 sm:p-6 shadow-md space-y-4">
+      {/* Section 2: Desglose de Sanciones por Jugador */}
+      <div className="rounded-2xl bg-surface-card border border-surface-border p-5 sm:p-6 shadow-xl space-y-4">
         
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h3 className="font-display text-lg font-bold text-slate-100 flex items-center gap-2">
+            <h3 className="font-display text-lg font-black text-white flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-orange-400" />
               <span>Contador de Sanciones por Posición</span>
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-300 font-medium">
               Frecuencia con la que cada participante ha caído en las posiciones sancionadas
             </p>
           </div>
 
           {/* Quick Filter Buttons */}
-          <div className="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-800 self-start sm:self-auto text-xs">
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1.5 rounded-xl border border-slate-700 self-start sm:self-auto text-xs">
             <button
               onClick={() => setFilterPenalty('all')}
-              className={`px-2.5 py-1 rounded-lg font-medium transition-colors ${
-                filterPenalty === 'all' ? 'bg-slate-700 text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`px-3 py-1 rounded-lg font-bold transition-colors ${
+                filterPenalty === 'all' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-300 hover:text-white'
               }`}
             >
               Todos
             </button>
             <button
               onClick={() => setFilterPenalty('p3')}
-              className={`px-2 py-1 rounded-lg font-medium transition-colors ${
-                filterPenalty === 'p3' ? 'bg-red-500/30 text-red-300 font-bold' : 'text-slate-400 hover:text-red-400'
+              className={`px-3 py-1 rounded-lg font-bold transition-colors ${
+                filterPenalty === 'p3' ? 'bg-red-500 text-white shadow-sm' : 'text-red-300 hover:text-white'
               }`}
             >
               9º (3€)
             </button>
             <button
               onClick={() => setFilterPenalty('p2')}
-              className={`px-2 py-1 rounded-lg font-medium transition-colors ${
-                filterPenalty === 'p2' ? 'bg-orange-500/30 text-orange-300 font-bold' : 'text-slate-400 hover:text-orange-400'
+              className={`px-3 py-1 rounded-lg font-bold transition-colors ${
+                filterPenalty === 'p2' ? 'bg-orange-500 text-white shadow-sm' : 'text-orange-300 hover:text-white'
               }`}
             >
               8º (2€)
             </button>
             <button
               onClick={() => setFilterPenalty('p1')}
-              className={`px-2 py-1 rounded-lg font-medium transition-colors ${
-                filterPenalty === 'p1' ? 'bg-amber-500/30 text-amber-300 font-bold' : 'text-slate-400 hover:text-amber-400'
+              className={`px-3 py-1 rounded-lg font-bold transition-colors ${
+                filterPenalty === 'p1' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-amber-300 hover:text-white'
               }`}
             >
               7º (1€)
             </button>
             <button
               onClick={() => setFilterPenalty('p05')}
-              className={`px-2 py-1 rounded-lg font-medium transition-colors ${
-                filterPenalty === 'p05' ? 'bg-slate-600 text-slate-200 font-bold' : 'text-slate-400 hover:text-slate-200'
+              className={`px-3 py-1 rounded-lg font-bold transition-colors ${
+                filterPenalty === 'p05' ? 'bg-slate-600 text-white shadow-sm' : 'text-slate-300 hover:text-white'
               }`}
             >
               6º (.5€)
@@ -306,28 +306,28 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
 
         {/* Global Penalty Summary Badges */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-center">
-            <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider block">9º (3.00€)</span>
-            <strong className="font-display text-xl font-bold text-red-400">{totalP3}</strong>
-            <span className="text-[10px] text-slate-400 block">{(totalP3 * 3).toFixed(2)}€ aportados</span>
+          <div className="p-3.5 rounded-xl bg-red-500/20 border-2 border-red-500/40 text-center shadow-sm">
+            <span className="text-[10px] font-black text-red-300 uppercase tracking-wider block">9º (3.00€)</span>
+            <strong className="font-display text-2xl font-black text-red-300">{totalP3}</strong>
+            <span className="text-[11px] text-slate-200 font-bold block">{(totalP3 * 3).toFixed(2)}€ aportados</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-center">
-            <span className="text-[10px] font-bold text-orange-400 uppercase tracking-wider block">8º (2.00€)</span>
-            <strong className="font-display text-xl font-bold text-orange-400">{totalP2}</strong>
-            <span className="text-[10px] text-slate-400 block">{(totalP2 * 2).toFixed(2)}€ aportados</span>
+          <div className="p-3.5 rounded-xl bg-orange-500/20 border-2 border-orange-500/40 text-center shadow-sm">
+            <span className="text-[10px] font-black text-orange-300 uppercase tracking-wider block">8º (2.00€)</span>
+            <strong className="font-display text-2xl font-black text-orange-300">{totalP2}</strong>
+            <span className="text-[11px] text-slate-200 font-bold block">{(totalP2 * 2).toFixed(2)}€ aportados</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center">
-            <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">7º (1.00€)</span>
-            <strong className="font-display text-xl font-bold text-amber-400">{totalP1}</strong>
-            <span className="text-[10px] text-slate-400 block">{(totalP1 * 1).toFixed(2)}€ aportados</span>
+          <div className="p-3.5 rounded-xl bg-amber-500/20 border-2 border-amber-500/40 text-center shadow-sm">
+            <span className="text-[10px] font-black text-amber-300 uppercase tracking-wider block">7º (1.00€)</span>
+            <strong className="font-display text-2xl font-black text-amber-300">{totalP1}</strong>
+            <span className="text-[11px] text-slate-200 font-bold block">{(totalP1 * 1).toFixed(2)}€ aportados</span>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-center">
-            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-wider block">6º (0.50€)</span>
-            <strong className="font-display text-xl font-bold text-slate-200">{totalP05}</strong>
-            <span className="text-[10px] text-slate-400 block">{(totalP05 * 0.5).toFixed(2)}€ aportados</span>
+          <div className="p-3.5 rounded-xl bg-slate-800 border-2 border-slate-600 text-center shadow-sm">
+            <span className="text-[10px] font-black text-slate-200 uppercase tracking-wider block">6º (0.50€)</span>
+            <strong className="font-display text-2xl font-black text-white">{totalP05}</strong>
+            <span className="text-[11px] text-slate-300 font-bold block">{(totalP05 * 0.5).toFixed(2)}€ aportados</span>
           </div>
         </div>
 
@@ -335,16 +335,16 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
         <div className="overflow-x-auto pt-2">
           <table className="w-full text-xs text-left border-collapse">
             <thead>
-              <tr className="border-b border-surface-border text-slate-400 text-[11px] uppercase tracking-wider">
-                <th className="py-2.5 px-3">Participante</th>
-                <th className="py-2.5 px-2 text-center text-red-400 font-bold">9º (3€)</th>
-                <th className="py-2.5 px-2 text-center text-orange-400 font-bold">8º (2€)</th>
-                <th className="py-2.5 px-2 text-center text-amber-400 font-bold">7º (1€)</th>
-                <th className="py-2.5 px-2 text-center text-slate-300 font-bold">6º (.5€)</th>
-                <th className="py-2.5 px-3 text-right font-bold text-slate-200">Total Multas</th>
+              <tr className="border-b-2 border-slate-700 bg-slate-900/90 text-slate-200 text-xs font-black uppercase tracking-wider">
+                <th className="py-3 px-3">Participante</th>
+                <th className="py-3 px-2 text-center text-red-300 font-black">9º (3€)</th>
+                <th className="py-3 px-2 text-center text-orange-300 font-black">8º (2€)</th>
+                <th className="py-3 px-2 text-center text-amber-300 font-black">7º (1€)</th>
+                <th className="py-3 px-2 text-center text-slate-200 font-black">6º (.5€)</th>
+                <th className="py-3 px-3 text-right font-black text-white">Total Multas</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/50">
+            <tbody className="divide-y divide-slate-700/60">
               {sortedBySanctions.map(player => {
                 const totalFinesCount = player.penaltyCounts.p3 + player.penaltyCounts.p2 + player.penaltyCounts.p1 + player.penaltyCounts.p05;
 

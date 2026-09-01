@@ -20,15 +20,15 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   );
 
   return (
-    <div className="rounded-2xl bg-surface/90 border border-surface-border p-4 sm:p-6 shadow-md">
+    <div className="rounded-2xl bg-surface-card border border-surface-border p-4 sm:p-6 shadow-xl">
       
       {/* Header & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h2 className="font-display text-lg sm:text-xl font-bold text-slate-100">
+          <h2 className="font-display text-lg sm:text-xl font-black text-white">
             Clasificación General del Bote
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-300 font-medium mt-0.5">
             Ordenado de mayor a menor aportación acumulada
           </p>
         </div>
@@ -40,7 +40,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Buscar participante..."
-            className="w-full sm:w-60 pl-9 pr-4 py-2 rounded-xl bg-slate-900/90 border border-surface-border text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 transition-colors"
+            className="w-full sm:w-60 pl-9 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/30 transition-colors"
           />
         </div>
       </div>
@@ -48,7 +48,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       {/* Mobile Card-List View (< sm) */}
       <div className="block sm:hidden space-y-2.5">
         {filtered.length === 0 ? (
-          <div className="py-8 text-center text-xs text-slate-500">
+          <div className="py-8 text-center text-xs text-slate-400">
             No se encontraron resultados para "{search}"
           </div>
         ) : (
@@ -61,69 +61,69 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               <div
                 key={player.id}
                 onClick={() => onSelectPlayer(player)}
-                className={`p-3 rounded-2xl border transition-all active:scale-[0.98] cursor-pointer ${
+                className={`p-3.5 rounded-2xl border-2 transition-all active:scale-[0.98] cursor-pointer ${
                   isLeader
-                    ? 'bg-amber-500/[0.08] border-amber-500/30 shadow-sm'
+                    ? 'bg-gradient-to-r from-amber-500/15 to-slate-900 border-amber-400/60 shadow-md shadow-amber-500/10'
                     : isRata
-                    ? 'bg-emerald-500/[0.04] border-emerald-500/25'
-                    : 'bg-slate-900/60 border-slate-800/80 hover:bg-slate-800/40'
+                    ? 'bg-gradient-to-r from-emerald-500/10 to-slate-900 border-emerald-400/50 shadow-sm'
+                    : 'bg-slate-900 border-slate-700/80 hover:bg-slate-850 hover:border-slate-600'
                 }`}
               >
-                <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex items-center justify-between gap-2 mb-2.5">
                   <div className="flex items-center gap-2.5">
                     {/* Rank Badge */}
                     <span
-                      className={`inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-display font-bold ${
+                      className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-display font-black ${
                         isLeader
-                          ? 'bg-amber-500 text-slate-950 font-black'
+                          ? 'bg-amber-400 text-slate-950 shadow-md'
                           : player.rank === 2
-                          ? 'bg-slate-700 text-slate-200'
+                          ? 'bg-slate-200 text-slate-900 shadow-sm'
                           : player.rank === 3
-                          ? 'bg-amber-900/60 text-amber-200 border border-amber-800/60'
+                          ? 'bg-amber-700 text-amber-100 border border-amber-500'
                           : isRata
-                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                          : 'bg-slate-800 text-slate-400'
+                          ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-400'
+                          : 'bg-slate-800 text-slate-300 border border-slate-700'
                       }`}
                     >
                       {player.rank}º
                     </span>
-                    <div className="w-8 h-8 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300">
+                    <div className="w-8 h-8 rounded-xl bg-slate-800 border-2 border-slate-600 flex items-center justify-center font-display font-black text-xs text-white">
                       {player.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <strong className="text-sm text-slate-100 block font-semibold">{player.name}</strong>
+                      <strong className="text-sm text-white block font-bold">{player.name}</strong>
                       {isLeader ? (
-                        <span className="text-[10px] text-amber-400 font-extrabold flex items-center gap-0.5">
-                          <Crown className="w-2.5 h-2.5" /> PAGA LA COCA
+                        <span className="text-[10px] text-amber-300 font-black flex items-center gap-0.5">
+                          <Crown className="w-3 h-3 text-amber-300" /> PAGA LA COCA
                         </span>
                       ) : isRata ? (
-                        <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
-                          <Shield className="w-2.5 h-2.5" /> EL RATA (0€)
+                        <span className="text-[10px] text-emerald-300 font-bold flex items-center gap-0.5">
+                          <Shield className="w-3 h-3 text-emerald-300" /> EL RATA (0€)
                         </span>
                       ) : null}
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <span className="font-display font-black text-base text-slate-100 block">
+                    <span className="font-display font-black text-base text-white block">
                       {player.totalPaid.toFixed(2)}€
                     </span>
-                    <span className="text-[11px] text-slate-400 font-mono">
+                    <span className="text-[11px] text-amber-300/90 font-mono font-bold">
                       {percent.toFixed(1)}% bote
                     </span>
                   </div>
                 </div>
 
                 {/* Micro Penalty Badges on Mobile */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-800/50 text-[10px]">
-                  <div className="flex items-center gap-1.5 font-mono">
-                    <span className="px-1.5 py-0.5 rounded bg-red-500/15 text-red-400">3€:{player.penaltyCounts.p3}</span>
-                    <span className="px-1.5 py-0.5 rounded bg-orange-500/15 text-orange-400">2€:{player.penaltyCounts.p2}</span>
-                    <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400">1€:{player.penaltyCounts.p1}</span>
-                    <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">.5€:{player.penaltyCounts.p05}</span>
+                <div className="flex items-center justify-between pt-2.5 border-t border-slate-700/80 text-[11px]">
+                  <div className="flex items-center gap-1.5 font-mono font-bold">
+                    <span className="px-2 py-0.5 rounded-md bg-red-500/25 text-red-300 border border-red-500/40">3€:{player.penaltyCounts.p3}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-orange-500/25 text-orange-300 border border-orange-500/40">2€:{player.penaltyCounts.p2}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-amber-500/25 text-amber-300 border border-amber-500/40">1€:{player.penaltyCounts.p1}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 border border-slate-700">.5€:{player.penaltyCounts.p05}</span>
                   </div>
-                  <span className="text-amber-400/80 font-semibold flex items-center gap-0.5 text-[10px]">
-                    Ver historial <ChevronRight className="w-3 h-3" />
+                  <span className="text-amber-300 font-bold flex items-center gap-0.5 text-[11px]">
+                    Ver <ChevronRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
               </div>
@@ -136,20 +136,20 @@ export const RankingTable: React.FC<RankingTableProps> = ({
       <div className="hidden sm:block overflow-x-auto -mx-6 px-6">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-surface-border text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-              <th className="py-3 px-3 w-14 text-center">Pos</th>
-              <th className="py-3 px-3">Participante</th>
-              <th className="py-3 px-3 text-right">Total Deuda</th>
-              <th className="py-3 px-3 text-center">% Bote</th>
-              <th className="py-3 px-3 text-center">Sanciones (3€ · 2€ · 1€ · 0.5€)</th>
-              <th className="py-3 px-3 text-center">Título</th>
-              <th className="py-3 px-3 w-10"></th>
+            <tr className="border-b-2 border-slate-700 bg-slate-900/80 text-xs font-black uppercase tracking-wider text-slate-200">
+              <th className="py-3.5 px-3 w-14 text-center">Pos</th>
+              <th className="py-3.5 px-3">Participante</th>
+              <th className="py-3.5 px-3 text-right">Total Deuda</th>
+              <th className="py-3.5 px-3 text-center">% Bote</th>
+              <th className="py-3.5 px-3 text-center">Sanciones (3€ · 2€ · 1€ · 0.5€)</th>
+              <th className="py-3.5 px-3 text-center">Título</th>
+              <th className="py-3.5 px-3 w-10"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60 text-sm">
+          <tbody className="divide-y divide-slate-700/60 text-sm">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-xs text-slate-500">
+                <td colSpan={7} className="py-8 text-center text-xs text-slate-400">
                   No se encontraron resultados para "{search}"
                 </td>
               </tr>
@@ -165,25 +165,25 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     onClick={() => onSelectPlayer(player)}
                     className={`group cursor-pointer transition-colors ${
                       isLeader
-                        ? 'bg-amber-500/[0.04] hover:bg-amber-500/[0.08]'
+                        ? 'bg-amber-500/10 hover:bg-amber-500/20'
                         : isRata
-                        ? 'bg-emerald-500/[0.02] hover:bg-emerald-500/[0.05]'
-                        : 'hover:bg-slate-800/40'
+                        ? 'bg-emerald-500/5 hover:bg-emerald-500/10'
+                        : 'hover:bg-slate-800/60'
                     }`}
                   >
                     {/* Rank Badge */}
                     <td className="py-3.5 px-3 text-center">
                       <span
-                        className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-display font-bold ${
+                        className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-display font-black ${
                           isLeader
-                            ? 'bg-amber-500 text-slate-950 shadow-sm'
+                            ? 'bg-amber-400 text-slate-950 shadow-md'
                             : player.rank === 2
-                            ? 'bg-slate-700 text-slate-200'
+                            ? 'bg-slate-200 text-slate-900'
                             : player.rank === 3
-                            ? 'bg-amber-900/60 text-amber-200 border border-amber-800/60'
+                            ? 'bg-amber-700 text-amber-100 border border-amber-500'
                             : isRata
-                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                            : 'bg-slate-800/80 text-slate-400'
+                            ? 'bg-emerald-500/30 text-emerald-300 border border-emerald-400'
+                            : 'bg-slate-800 text-slate-300 border border-slate-700'
                         }`}
                       >
                         {player.rank}º
@@ -193,11 +193,11 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {/* Participant Avatar & Name */}
                     <td className="py-3.5 px-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300 group-hover:border-amber-500/40 group-hover:text-amber-300 transition-colors">
+                        <div className="w-8 h-8 rounded-xl bg-slate-800 border-2 border-slate-600 flex items-center justify-center font-display font-black text-xs text-white group-hover:border-amber-400 group-hover:text-amber-300 transition-colors">
                           {player.name.slice(0, 2).toUpperCase()}
                         </div>
                         <div>
-                          <span className="font-semibold text-slate-100 group-hover:text-amber-300 transition-colors block">
+                          <span className="font-bold text-white group-hover:text-amber-300 transition-colors block">
                             {player.name}
                           </span>
                         </div>
@@ -206,7 +206,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
                     {/* Total Amount */}
                     <td className="py-3.5 px-3 text-right">
-                      <span className="font-display font-bold text-base text-slate-100">
+                      <span className="font-display font-black text-base text-white">
                         {player.totalPaid.toFixed(2)}€
                       </span>
                     </td>
@@ -214,12 +214,12 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {/* Percentage */}
                     <td className="py-3.5 px-3 text-center">
                       <div className="inline-flex flex-col items-center gap-1 w-20">
-                        <span className="text-xs font-medium text-slate-300">
+                        <span className="text-xs font-bold text-amber-300">
                           {percent.toFixed(1)}%
                         </span>
-                        <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                        <div className="w-full h-2 rounded-full bg-slate-700 overflow-hidden border border-slate-600">
                           <div
-                            className="h-full bg-amber-400 rounded-full"
+                            className="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"
                             style={{ width: `${Math.min(100, percent)}%` }}
                           />
                         </div>
@@ -228,17 +228,17 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 
                     {/* Penalty breakdown */}
                     <td className="py-3.5 px-3 text-center">
-                      <div className="inline-flex items-center gap-1.5 text-xs font-mono">
-                        <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20" title="Multas de 3.00€">
+                      <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-red-500/25 text-red-300 border border-red-500/40" title="Multas de 3.00€">
                           3€: {player.penaltyCounts.p3}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20" title="Multas de 2.00€">
+                        <span className="px-2 py-0.5 rounded-md bg-orange-500/25 text-orange-300 border border-orange-500/40" title="Multas de 2.00€">
                           2€: {player.penaltyCounts.p2}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20" title="Multas de 1.00€">
+                        <span className="px-2 py-0.5 rounded-md bg-amber-500/25 text-amber-300 border border-amber-500/40" title="Multas de 1.00€">
                           1€: {player.penaltyCounts.p1}
                         </span>
-                        <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700" title="Multas de 0.50€">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-800 text-slate-200 border border-slate-700" title="Multas de 0.50€">
                           0.5€: {player.penaltyCounts.p05}
                         </span>
                       </div>
@@ -247,21 +247,21 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {/* Honorific Title */}
                     <td className="py-3.5 px-3 text-center">
                       {isLeader ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-[11px] font-bold text-amber-400">
-                          <Crown className="w-3 h-3" /> PAGA LA COCA
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/25 border border-amber-400/60 text-xs font-black text-amber-300">
+                          <Crown className="w-3.5 h-3.5 text-amber-300" /> PAGA LA COCA
                         </span>
                       ) : isRata ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-bold text-emerald-400">
-                          <Shield className="w-3 h-3" /> EL RATA
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/25 border border-emerald-400/60 text-xs font-black text-emerald-300">
+                          <Shield className="w-3.5 h-3.5 text-emerald-300" /> EL RATA
                         </span>
                       ) : (
-                        <span className="text-xs text-slate-500">En juego</span>
+                        <span className="text-xs font-semibold text-slate-400">En juego</span>
                       )}
                     </td>
 
                     {/* Chevron */}
                     <td className="py-3.5 px-3 text-right">
-                      <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-300 transition-colors inline" />
+                      <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-amber-300 transition-colors inline" />
                     </td>
                   </tr>
                 );

@@ -67,40 +67,40 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
         /* 1. Full 38-Journey Matrix View */
         <div className="space-y-4">
           {/* Legend & Swipe Tip */}
-          <div className="rounded-2xl bg-surface/80 border border-surface-border p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div className="rounded-2xl bg-surface-card border border-surface-border p-4 flex flex-wrap items-center justify-between gap-3 text-xs shadow-lg">
             <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <span className="text-slate-400 font-semibold uppercase text-[10px] tracking-wider mr-1">Leyenda:</span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-500/20 text-red-400 border border-red-500/30 font-bold">
+              <span className="text-slate-200 font-extrabold uppercase text-[10px] tracking-wider mr-1">Leyenda:</span>
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-red-500/25 text-red-300 border border-red-500/50 font-bold">
                 3.00€ (9º)
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30 font-bold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-orange-500/25 text-orange-300 border border-orange-500/50 font-bold">
                 2.00€ (8º)
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 font-bold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-amber-500/25 text-amber-300 border border-amber-500/50 font-bold">
                 1.00€ (7º)
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-700/80 text-slate-300 border border-slate-600 font-medium">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-700 text-slate-200 border border-slate-600 font-bold">
                 0.50€ (6º)
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
                 0.00€ (Libre)
               </span>
             </div>
-            <div className="text-[11px] text-amber-400/90 font-medium flex items-center gap-1">
+            <div className="text-xs text-amber-300 font-bold flex items-center gap-1">
               <span>👉 Desliza horizontalmente para ver las 38 fechas</span>
             </div>
           </div>
 
           {/* 38J Matrix Table */}
-          <div className="rounded-2xl bg-surface/90 border border-surface-border shadow-xl overflow-hidden">
+          <div className="rounded-2xl bg-surface-card border border-surface-border shadow-xl overflow-hidden">
             <div className="overflow-x-auto relative">
               <table className="w-full text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-surface-border bg-slate-900 text-slate-300 text-[11px]">
-                    <th className="py-3 px-3.5 text-left sticky left-0 bg-slate-900 z-20 font-bold shadow-[3px_0_6px_rgba(0,0,0,0.4)] min-w-[130px] sm:min-w-[150px] border-r border-slate-800">
+                  <tr className="border-b-2 border-slate-700 bg-slate-900 text-slate-200 text-xs">
+                    <th className="py-3.5 px-3.5 text-left sticky left-0 bg-slate-900 z-20 font-black shadow-[3px_0_6px_rgba(0,0,0,0.5)] min-w-[130px] sm:min-w-[150px] border-r-2 border-slate-700">
                       Participante
                     </th>
-                    <th className="py-3 px-3 text-right font-bold text-amber-400 min-w-[70px] sm:min-w-[80px] border-r border-slate-800/80 bg-slate-900/90">
+                    <th className="py-3.5 px-3 text-right font-black text-amber-300 min-w-[70px] sm:min-w-[80px] border-r-2 border-slate-700 bg-slate-900">
                       Total
                     </th>
                     {Array.from({ length: totalJourneys }, (_, i) => {
@@ -109,37 +109,37 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                       return (
                         <th
                           key={i}
-                          className={`py-3 px-1.5 text-center min-w-[38px] sm:min-w-[42px] font-mono font-semibold ${isPlayed ? 'text-slate-200 bg-slate-900/70' : 'text-slate-600 bg-slate-950/40'
+                          className={`py-3 px-1.5 text-center min-w-[38px] sm:min-w-[42px] font-mono font-bold ${isPlayed ? 'text-white bg-slate-850' : 'text-slate-500 bg-slate-950/60'
                             }`}
                         >
-                          <span className={isPlayed ? 'text-amber-400 font-bold' : ''}>J{jNum}</span>
+                          <span className={isPlayed ? 'text-amber-300 font-black' : ''}>J{jNum}</span>
                         </th>
                       );
                     })}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-700/60">
                   {participants.map(p => {
                     const pStats = stats.ranking.find(r => r.id === p.id);
                     const isLeader = pStats?.rank === 1 && (pStats?.totalPaid || 0) > 0;
                     const isRata = pStats?.honorificTitle === 'El Rata';
 
                     return (
-                      <tr key={p.id} className="hover:bg-slate-800/40 transition-colors">
+                      <tr key={p.id} className="hover:bg-slate-800/60 transition-colors">
                         {/* Sticky Name */}
-                        <td className="py-2.5 px-3.5 sticky left-0 bg-slate-900 z-10 font-medium text-slate-100 whitespace-nowrap shadow-[3px_0_6px_rgba(0,0,0,0.4)] min-w-[130px] sm:min-w-[150px] border-r border-slate-800">
+                        <td className="py-2.5 px-3.5 sticky left-0 bg-slate-900 z-10 font-bold text-white whitespace-nowrap shadow-[3px_0_6px_rgba(0,0,0,0.5)] min-w-[130px] sm:min-w-[150px] border-r-2 border-slate-700">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                            <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-black text-[10px] text-white">
                               {p.name.slice(0, 2).toUpperCase()}
                             </div>
-                            <span className="font-semibold text-slate-200">{p.name}</span>
+                            <span className="font-bold text-white">{p.name}</span>
                             {isLeader && <span className="text-[10px] text-amber-400 font-bold">👑</span>}
                             {isRata && <span className="text-[10px] text-emerald-400 font-bold">🛡️</span>}
                           </div>
                         </td>
 
                         {/* Total Column */}
-                        <td className="py-2.5 px-3 text-right font-bold text-amber-400 font-display whitespace-nowrap min-w-[70px] sm:min-w-[80px] border-r border-slate-800/80 bg-slate-900/50">
+                        <td className="py-2.5 px-3 text-right font-black text-amber-300 font-display whitespace-nowrap min-w-[70px] sm:min-w-[80px] border-r-2 border-slate-700 bg-slate-900/80">
                           {pStats ? `${pStats.totalPaid.toFixed(2)}€` : '0.00€'}
                         </td>
 
@@ -150,37 +150,37 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                           const amt = jRec?.completed ? Number(jRec.penalties?.[p.id] || 0) : null;
 
                           let cellBadge = (
-                            <span className="text-slate-700 select-none text-[11px]">-</span>
+                            <span className="text-slate-600 select-none text-[11px] font-bold">·</span>
                           );
 
                           if (amt !== null) {
                             if (amt === 0) {
                               cellBadge = (
-                                <span className="inline-block w-5 h-5 leading-5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold">
+                                <span className="inline-block w-5 h-5 leading-5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black">
                                   0
                                 </span>
                               );
                             } else if (amt === 3.0) {
                               cellBadge = (
-                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-red-500/25 text-red-400 border border-red-500/40 text-[11px] font-bold shadow-sm">
+                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-red-500/30 text-red-300 border border-red-500/60 text-[11px] font-black shadow-sm">
                                   3€
                                 </span>
                               );
                             } else if (amt === 2.0) {
                               cellBadge = (
-                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-orange-500/25 text-orange-400 border border-orange-500/40 text-[11px] font-bold shadow-sm">
+                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-orange-500/30 text-orange-300 border border-orange-500/60 text-[11px] font-black shadow-sm">
                                   2€
                                 </span>
                               );
                             } else if (amt === 1.0) {
                               cellBadge = (
-                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-amber-500/25 text-amber-400 border border-amber-500/40 text-[11px] font-bold shadow-sm">
+                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-amber-500/30 text-amber-300 border border-amber-500/60 text-[11px] font-black shadow-sm">
                                   1€
                                 </span>
                               );
                             } else if (amt === 0.5) {
                               cellBadge = (
-                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-slate-700 text-slate-200 border border-slate-600 text-[10px] font-semibold">
+                                <span className="inline-block px-1.5 py-0.5 rounded-md bg-slate-700 text-slate-100 border border-slate-500 text-[10px] font-bold">
                                   .5€
                                 </span>
                               );

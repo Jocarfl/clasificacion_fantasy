@@ -8,22 +8,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#090d16',
+        background: '#0b1329',
         surface: {
-          DEFAULT: '#0f172a',
-          hover: '#1e293b',
-          muted: '#0b1120',
-          border: 'rgba(255, 255, 255, 0.08)'
+          DEFAULT: '#162036',
+          card: '#1a2640',
+          hover: '#223254',
+          muted: '#0e1830',
+          border: 'rgba(255, 255, 255, 0.16)'
         },
         gold: {
           DEFAULT: '#f59e0b',
           light: '#fbbf24',
           dark: '#d97706',
-          glow: 'rgba(245, 158, 11, 0.18)'
+          glow: 'rgba(245, 158, 11, 0.25)'
         },
         emerald: {
           DEFAULT: '#10b981',
-          glow: 'rgba(16, 185, 129, 0.18)'
+          glow: 'rgba(16, 185, 129, 0.25)'
         }
       },
       fontFamily: {
