@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Calendar, Grid, CheckCircle2, Clock } from 'lucide-react';
+import { Table, Calendar, Grid, CheckCircle2, Clock, ArrowUpDown, ArrowDown, ArrowUp } from 'lucide-react';
 import { LeagueData, CalculatedStats } from '../../types/fantasy';
 
 interface JourneyViewProps {
@@ -9,6 +9,7 @@ interface JourneyViewProps {
 
 export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
   const [viewMode, setViewMode] = useState<'matrix' | 'cards'>('matrix');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [selectedJourneyNum, setSelectedJourneyNum] = useState<number>(() => {
     return stats.globalStats.lastUpdatedJourney || 1;
   });
@@ -16,6 +17,32 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
   const totalJourneys = data.totalJourneys || 38;
   const participants = data.participants || [];
   const selectedJourney = data.journeys?.find(j => j.journey === selectedJourneyNum);
+
+  // Sorted participants for Matrix 38J (default: desc = highest debt first)
+  const sortedParticipants = [...participants].sort((a, b) => {
+    const aPaid = stats.ranking.find(r => r.id === a.id)?.totalPaid || 0;
+    const bPaid = stats.ranking.find(r => r.id === b.id)?.totalPaid || 0;
+    if (sortOrder === 'desc') {
+      return bPaid - aPaid || a.name.localeCompare(b.name);
+    } else {
+      return aPaid - bPaid || a.name.localeCompare(b.name);
+    }
+  });
+
+  // Sorted sanctioned participants for selected journey (desc: 3€ -> 2€ -> 1€ -> 0.5€)
+  const sanctionedInJourney = selectedJourney
+    ? participants
+        .map(p => ({
+          ...p,
+          amt: Number(selectedJourney.penalties?.[p.id] || 0)
+        }))
+        .filter(p => p.amt > 0)
+        .sort((a, b) => b.amt - a.amt)
+    : [];
+
+  const safeInJourney = selectedJourney
+    ? participants.filter(p => Number(selectedJourney.penalties?.[p.id] || 0) === 0)
+    : [];
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -86,8 +113,20 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                 0.00€ (Libre)
               </span>
             </div>
-            <div className="text-xs text-amber-300 font-bold flex items-center gap-1">
-              <span>👉 Desliza horizontalmente para ver las 38 fechas</span>
+            
+            {/* Sort Toggle Pill */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs font-bold text-amber-300 transition-colors shadow-sm active:scale-95"
+                title="Cambiar ordenación por deuda total"
+              >
+                <ArrowUpDown className="w-3.5 h-3.5" />
+                <span>Ordenar: {sortOrder === 'desc' ? 'Mayor a menor' : 'Menor a mayor'}</span>
+              </button>
+              <div className="text-xs text-slate-300 font-medium hidden sm:flex items-center gap-1">
+                <span>👉 Desliza horizontalmente</span>
+              </div>
             </div>
           </div>
 
@@ -100,8 +139,19 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                     <th className="py-3.5 px-3.5 text-left sticky left-0 bg-slate-900 z-20 font-black shadow-[3px_0_6px_rgba(0,0,0,0.5)] min-w-[130px] sm:min-w-[150px] border-r-2 border-slate-700">
                       Participante
                     </th>
-                    <th className="py-3.5 px-3 text-right font-black text-amber-300 min-w-[70px] sm:min-w-[80px] border-r-2 border-slate-700 bg-slate-900">
-                      Total
+                    <th
+                      onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
+                      className="py-3.5 px-3 text-right font-black text-amber-300 min-w-[85px] sm:min-w-[95px] border-r-2 border-slate-700 bg-slate-900 cursor-pointer hover:bg-slate-800 transition-colors select-none group"
+                      title={`Ordenar por Total (${sortOrder === 'desc' ? 'mayor a menor' : 'menor a mayor'})`}
+                    >
+                      <div className="flex items-center justify-end gap-1">
+                        <span>Total</span>
+                        {sortOrder === 'desc' ? (
+                          <ArrowDown className="w-3.5 h-3.5 text-amber-300 group-hover:scale-110 transition-transform" />
+                        ) : (
+                          <ArrowUp className="w-3.5 h-3.5 text-amber-300 group-hover:scale-110 transition-transform" />
+                        )}
+                      </div>
                     </th>
                     {Array.from({ length: totalJourneys }, (_, i) => {
                       const jNum = i + 1;
@@ -119,7 +169,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-700/60">
-                  {participants.map(p => {
+                  {sortedParticipants.map(p => {
                     const pStats = stats.ranking.find(r => r.id === p.id);
                     const isLeader = pStats?.rank === 1 && (pStats?.totalPaid || 0) > 0;
                     const isRata = pStats?.honorificTitle === 'El Rata';
@@ -139,7 +189,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                         </td>
 
                         {/* Total Column */}
-                        <td className="py-2.5 px-3 text-right font-black text-amber-300 font-display whitespace-nowrap min-w-[70px] sm:min-w-[80px] border-r-2 border-slate-700 bg-slate-900/80">
+                        <td className="py-2.5 px-3 text-right font-black text-amber-300 font-display whitespace-nowrap min-w-[85px] sm:min-w-[95px] border-r-2 border-slate-700 bg-slate-900/80">
                           {pStats ? `${pStats.totalPaid.toFixed(2)}€` : '0.00€'}
                         </td>
 
@@ -215,18 +265,18 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                 <button
                   key={jNum}
                   onClick={() => setSelectedJourneyNum(jNum)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${isSelected
-                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-bold scale-105'
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${isSelected
+                    ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 font-black scale-105'
                     : isPlayed
-                      ? 'bg-slate-800/90 text-slate-200 border border-slate-700 hover:border-slate-500'
-                      : 'bg-slate-900/50 text-slate-500 border border-slate-800 hover:text-slate-400'
+                      ? 'bg-slate-800 text-white border border-slate-700 hover:border-slate-500'
+                      : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:text-slate-200'
                     }`}
                 >
                   <span>J{jNum}</span>
                   {isPlayed ? (
                     <CheckCircle2 className={`w-3.5 h-3.5 ${isSelected ? 'text-slate-950' : 'text-emerald-400'}`} />
                   ) : (
-                    <Clock className="w-3.5 h-3.5 text-slate-600" />
+                    <Clock className="w-3.5 h-3.5 text-slate-500" />
                   )}
                 </button>
               );
@@ -234,19 +284,19 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
           </div>
 
           {/* Selected Journey Spotlight Card */}
-          <div className="rounded-2xl bg-surface/90 border border-surface-border p-6 shadow-md">
-            <div className="flex items-center justify-between border-b border-surface-border pb-4 mb-6">
+          <div className="rounded-2xl bg-surface-card border border-surface-border p-5 sm:p-6 shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-700 pb-4 mb-6">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-300">
                   {selectedJourney?.completed ? 'Jornada Finalizada' : 'Jornada Pendiente'}
                 </span>
-                <h3 className="font-display text-2xl font-bold text-slate-100">
+                <h3 className="font-display text-2xl font-black text-white">
                   Jornada {selectedJourneyNum}
                 </h3>
               </div>
               <div className="text-right">
-                <span className="text-xs text-slate-400 block">Bote de la Fecha</span>
-                <span className="font-display text-xl font-bold text-amber-400">
+                <span className="text-xs text-slate-300 font-medium block">Bote de la Fecha</span>
+                <span className="font-display text-2xl font-black text-amber-300">
                   {selectedJourney?.completed ? '6.50€' : '0.00€'}
                 </span>
               </div>
@@ -254,45 +304,44 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
 
             {selectedJourney?.completed ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Penalties List */}
+                {/* Penalties List - Sorted from highest to lowest */}
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                    Sancionados en esta Jornada
+                  <h4 className="text-xs font-black uppercase tracking-wider text-slate-200 mb-2 flex items-center justify-between">
+                    <span>Sancionados en esta Jornada</span>
+                    <span className="text-[10px] text-amber-300 font-bold">Ordenados de mayor a menor</span>
                   </h4>
-                  {participants.map(p => {
-                    const amt = selectedJourney.penalties?.[p.id] || 0;
-                    if (amt === 0) return null;
-
-                    let badgeStyle = 'bg-slate-800 text-slate-300 border-slate-700';
+                  {sanctionedInJourney.map(p => {
+                    const amt = p.amt;
+                    let badgeStyle = 'bg-slate-700 text-slate-200 border-slate-600';
                     let posLabel = '6º Clasificado';
                     if (amt === 3.0) {
-                      badgeStyle = 'bg-red-500/15 text-red-400 border-red-500/30';
+                      badgeStyle = 'bg-red-500/25 text-red-300 border-red-500/50 font-bold';
                       posLabel = '9º (Último)';
                     } else if (amt === 2.0) {
-                      badgeStyle = 'bg-orange-500/15 text-orange-400 border-orange-500/30';
+                      badgeStyle = 'bg-orange-500/25 text-orange-300 border-orange-500/50 font-bold';
                       posLabel = '8º (Penúltimo)';
                     } else if (amt === 1.0) {
-                      badgeStyle = 'bg-amber-500/15 text-amber-400 border-amber-500/30';
+                      badgeStyle = 'bg-amber-500/25 text-amber-300 border-amber-500/50 font-bold';
                       posLabel = '7º Clasificado';
                     }
 
                     return (
                       <div
                         key={p.id}
-                        className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800"
+                        className="flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-700/80 shadow-sm"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300">
+                          <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-black text-xs text-white">
                             {p.name.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <strong className="text-sm text-slate-100 block">{p.name}</strong>
+                            <strong className="text-sm text-white block font-bold">{p.name}</strong>
                             <span className={`inline-block text-[11px] px-2 py-0.5 rounded-full border mt-0.5 ${badgeStyle}`}>
                               {posLabel}
                             </span>
                           </div>
                         </div>
-                        <span className="font-display font-bold text-base text-slate-100">
+                        <span className="font-display font-black text-lg text-white">
                           {amt.toFixed(2)}€
                         </span>
                       </div>
@@ -302,23 +351,21 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
 
                 {/* Safe Participants */}
                 <div className="space-y-2.5">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-2">
+                  <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400 mb-2">
                     Libres de Multa (0.00€)
                   </h4>
                   <div className="grid grid-cols-2 gap-2">
-                    {participants.map(p => {
-                      const amt = selectedJourney.penalties?.[p.id] || 0;
-                      if (amt > 0) return null;
+                    {safeInJourney.map(p => {
                       return (
                         <div
                           key={p.id}
-                          className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/40 border border-slate-800/80 text-xs text-slate-300"
+                          className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-700/80 text-xs text-slate-200"
                         >
-                          <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center font-display font-bold text-[10px] text-slate-400">
+                          <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
                             {p.name.slice(0, 2).toUpperCase()}
                           </div>
-                          <span className="font-medium truncate">{p.name}</span>
-                          <span className="ml-auto text-emerald-400 text-[10px] font-bold">0€</span>
+                          <span className="font-bold truncate text-white">{p.name}</span>
+                          <span className="ml-auto text-emerald-400 text-xs font-black">0€</span>
                         </div>
                       );
                     })}
@@ -326,10 +373,10 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-500">
-                <Clock className="w-8 h-8 mx-auto mb-2 text-slate-600" />
-                <p className="text-sm font-medium text-slate-400">Esta jornada aún no ha sido disputada</p>
-                <p className="text-xs text-slate-600 mt-1">Los datos se actualizarán cuando finalicen los partidos</p>
+              <div className="text-center py-12 text-slate-400">
+                <Clock className="w-8 h-8 mx-auto mb-2 text-slate-500" />
+                <p className="text-sm font-bold text-white">Esta jornada aún no ha sido disputada</p>
+                <p className="text-xs text-slate-400 mt-1">Los datos se actualizarán cuando finalicen los partidos</p>
               </div>
             )}
           </div>
