@@ -46,7 +46,7 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
               {second ? `${second.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>
           </button>
-          <div className="w-full h-16 sm:h-20 mt-2.5 rounded-t-xl bg-gradient-to-b from-slate-800 to-slate-900 border-t border-x border-slate-700/80 flex items-center justify-center font-display font-black text-xl sm:text-2xl text-slate-600">
+          <div className="w-full h-20 sm:h-24 mt-2.5 rounded-t-xl bg-gradient-to-b from-slate-800 to-slate-900 border-t border-x border-slate-700/80 flex items-center justify-center font-display font-black text-xl sm:text-2xl text-slate-600 shadow-inner">
             2
           </div>
         </div>
@@ -75,7 +75,7 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
               {first ? `${first.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>
           </button>
-          <div className="w-full h-22 sm:h-28 mt-2.5 rounded-t-xl bg-gradient-to-b from-amber-500/20 to-slate-900 border-t-2 border-x border-amber-500/40 flex items-center justify-center font-display font-black text-2xl sm:text-3xl text-amber-500/60 shadow-inner">
+          <div className="w-full h-28 sm:h-36 mt-2.5 rounded-t-xl bg-gradient-to-b from-amber-500/20 to-slate-900 border-t-2 border-x border-amber-500/40 flex items-center justify-center font-display font-black text-2xl sm:text-3xl text-amber-500/60 shadow-inner">
             1
           </div>
         </div>
@@ -101,7 +101,7 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
               {third ? `${third.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>
           </button>
-          <div className="w-full h-12 sm:h-14 mt-2.5 rounded-t-xl bg-gradient-to-b from-amber-950/40 to-slate-900 border-t border-x border-amber-900/50 flex items-center justify-center font-display font-black text-lg sm:text-xl text-amber-900/60">
+          <div className="w-full h-14 sm:h-16 mt-2.5 rounded-t-xl bg-gradient-to-b from-amber-950/40 to-slate-900 border-t border-x border-amber-900/50 flex items-center justify-center font-display font-black text-lg sm:text-xl text-amber-900/60">
             3
           </div>
         </div>
