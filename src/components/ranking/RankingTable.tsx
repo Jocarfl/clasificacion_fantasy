@@ -244,6 +244,19 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                       </div>
                     </td>
 
+                    {/* Payment Status (4J) */}
+                    <td className="py-3.5 px-3 text-center">
+                      {player.isUpToDate ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-xs font-black text-emerald-300">
+                          ✓ Al día
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-500/25 border border-red-500/50 text-xs font-black text-red-300">
+                          Debe {player.totalSettledPending.toFixed(2)}€
+                        </span>
+                      )}
+                    </td>
+
                     {/* Honorific Title */}
                     <td className="py-3.5 px-3 text-center">
                       {isLeader ? (

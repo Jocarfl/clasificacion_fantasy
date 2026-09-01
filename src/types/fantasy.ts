@@ -25,6 +25,14 @@ export interface JourneyRecord {
   penalties: Record<string, number>;
 }
 
+export interface SettlementBlock {
+  id: string;
+  label: string;
+  startJourney: number;
+  endJourney: number;
+  paidStatus: Record<string, boolean>;
+}
+
 export interface LeagueData {
   title: string;
   season: string;
@@ -32,6 +40,7 @@ export interface LeagueData {
   rules: Rules;
   participants: Participant[];
   journeys: JourneyRecord[];
+  settlements?: SettlementBlock[];
 }
 
 export interface PenaltyCounts {
@@ -53,6 +62,9 @@ export interface ParticipantStats {
   penaltyCounts: PenaltyCounts;
   history: number[];
   cumulativeHistory: number[];
+  totalSettledPaid: number;
+  totalSettledPending: number;
+  isUpToDate: boolean;
 }
 
 export interface LeaderSummary {
@@ -69,13 +81,37 @@ export interface GlobalStats {
   totalJourneysCount: number;
   averagePerJourney: number;
   progressPercent: number;
+  totalCollectedInBank: number;
+  totalPendingCollection: number;
   leader: LeaderSummary | null;
   ratas: LeaderSummary[];
   lastUpdatedJourney: number;
+}
+
+export interface SettlementPlayerDetail {
+  id: string;
+  name: string;
+  avatar: string;
+  debtInBlock: number;
+  paid: boolean;
+}
+
+export interface CalculatedSettlement {
+  id: string;
+  label: string;
+  startJourney: number;
+  endJourney: number;
+  isCompleted: boolean;
+  isInProgress: boolean;
+  totalBlockDebt: number;
+  totalBlockCollected: number;
+  totalBlockPending: number;
+  players: SettlementPlayerDetail[];
 }
 
 export interface CalculatedStats {
   ranking: ParticipantStats[];
   globalStats: GlobalStats;
   journeyData: JourneyRecord[];
+  settlements: CalculatedSettlement[];
 }

@@ -129,5 +129,177 @@
         "manu": 0.0
       }
     }
+  ],
+  "settlements": [
+    {
+      "id": "tramo-1",
+      "label": "Tramo 1 (J1 - J4)",
+      "startJourney": 1,
+      "endJourney": 4,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-2",
+      "label": "Tramo 2 (J5 - J8)",
+      "startJourney": 5,
+      "endJourney": 8,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-3",
+      "label": "Tramo 3 (J9 - J12)",
+      "startJourney": 9,
+      "endJourney": 12,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-4",
+      "label": "Tramo 4 (J13 - J16)",
+      "startJourney": 13,
+      "endJourney": 16,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-5",
+      "label": "Tramo 5 (J17 - J20)",
+      "startJourney": 17,
+      "endJourney": 20,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-6",
+      "label": "Tramo 6 (J21 - J24)",
+      "startJourney": 21,
+      "endJourney": 24,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-7",
+      "label": "Tramo 7 (J25 - J28)",
+      "startJourney": 25,
+      "endJourney": 28,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-8",
+      "label": "Tramo 8 (J29 - J32)",
+      "startJourney": 29,
+      "endJourney": 32,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-9",
+      "label": "Tramo 9 (J33 - J36)",
+      "startJourney": 33,
+      "endJourney": 36,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    },
+    {
+      "id": "tramo-10",
+      "label": "Tramo 10 (J37 - J38)",
+      "startJourney": 37,
+      "endJourney": 38,
+      "paidStatus": {
+        "joan": false,
+        "pablo": false,
+        "david": false,
+        "josep": false,
+        "ruben": false,
+        "jordi": false,
+        "xarly": false,
+        "manu": false,
+        "sanfe": false
+      }
+    }
   ]
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Trophy, LayoutDashboard, ListOrdered, BarChart3, PlusCircle, Share2, Grid3X3 } from 'lucide-react';
+import { Trophy, LayoutDashboard, ListOrdered, BarChart3, PlusCircle, Share2, Grid3X3, CreditCard } from 'lucide-react';
 
-export type ActiveTab = 'dashboard' | 'journeys' | 'ranking' | 'analytics' | 'admin';
+export type ActiveTab = 'dashboard' | 'journeys' | 'ranking' | 'payments' | 'analytics' | 'admin';
 
 interface NavbarProps {
   activeTab: ActiveTab;
@@ -30,6 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'dashboard', label: 'Resumen', shortLabel: 'Inicio', icon: LayoutDashboard },
     { id: 'journeys', label: 'Jornadas', shortLabel: 'Jornadas', icon: Grid3X3 },
     { id: 'ranking', label: 'Clasificación', shortLabel: 'Tabla', icon: ListOrdered },
+    { id: 'payments', label: 'Pagos (4J)', shortLabel: 'Pagos', icon: CreditCard },
     { id: 'analytics', label: 'Estadísticas', shortLabel: 'Métricas', icon: BarChart3 },
     { id: 'admin', label: 'Añadir', shortLabel: 'Añadir', icon: PlusCircle, highlight: true }
   ];

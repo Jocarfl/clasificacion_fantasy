@@ -10,10 +10,11 @@ import { RankingTable } from './components/ranking/RankingTable';
 import { PlayerModal } from './components/ranking/PlayerModal';
 import { JourneyView } from './components/journeys/JourneyView';
 import { AnalyticsView } from './components/analytics/AnalyticsView';
+import { PaymentsView } from './components/payments/PaymentsView';
 import { JourneySnippetGenerator } from './components/admin/JourneySnippetGenerator';
 
 export const App: React.FC = () => {
-  const [data, setData] = useState<LeagueData>(initialLeagueData as unknown as LeagueData);
+  const [data] = useState<LeagueData>(initialLeagueData as unknown as LeagueData);
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedPlayer, setSelectedPlayer] = useState<ParticipantStats | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -81,6 +82,12 @@ export const App: React.FC = () => {
           </div>
         )}
 
+        {activeTab === 'payments' && (
+          <div className="animate-fade-in space-y-6">
+            <PaymentsView data={data} stats={stats} onShowToast={showToast} />
+          </div>
+        )}
+
         {activeTab === 'analytics' && (
           <div className="animate-fade-in">
             <AnalyticsView stats={stats} />
@@ -91,7 +98,6 @@ export const App: React.FC = () => {
           <div className="animate-fade-in">
             <JourneySnippetGenerator
               data={data}
-              onApplyLocalPreview={(updated) => setData(updated)}
               onShowToast={showToast}
             />
           </div>
