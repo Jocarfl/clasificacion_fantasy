@@ -12,9 +12,12 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
   if (!player) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-lg rounded-2xl bg-surface border border-surface-border p-6 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-lg rounded-t-3xl sm:rounded-2xl bg-surface border-t sm:border border-surface-border p-5 sm:p-6 shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
         
+        {/* Mobile drag handle indicator */}
+        <div className="sm:hidden w-12 h-1 bg-slate-700 rounded-full mx-auto mb-3" />
+
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -24,20 +27,20 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
         </button>
 
         {/* Player Header */}
-        <div className="flex items-center gap-4 mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-3xl shadow-inner">
+        <div className="flex items-center gap-3.5 mb-5">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-800/90 border border-slate-700 flex items-center justify-center text-3xl shadow-inner">
             {player.avatar}
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-display text-2xl font-bold text-slate-100">
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-slate-100">
                 {player.name}
               </h3>
-              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-bold text-slate-300 border border-slate-700">
+              <span className="px-2 py-0.5 rounded-full bg-slate-800 text-xs font-bold text-amber-400 border border-amber-500/20">
                 {player.rank}º Posición
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-400 mt-0.5">
               {player.honorificTitle ? `${player.honorificTitle} • ` : ''}
               {player.percentageOfPot.toFixed(1)}% de la deuda total del grupo
             </p>
@@ -45,9 +48,9 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
         </div>
 
         {/* 4 Stat Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-3 text-center">
-            <span className="text-[11px] text-slate-400 uppercase tracking-wider block mb-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
+          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-2.5 text-center">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-0.5">
               Total Deuda
             </span>
             <strong className="font-display text-lg font-bold text-amber-400">
@@ -55,8 +58,8 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
             </strong>
           </div>
 
-          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-3 text-center">
-            <span className="text-[11px] text-slate-400 uppercase tracking-wider block mb-1">
+          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-2.5 text-center">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-0.5">
               % del Bote
             </span>
             <strong className="font-display text-lg font-bold text-slate-200">
@@ -64,8 +67,8 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
             </strong>
           </div>
 
-          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-3 text-center">
-            <span className="text-[11px] text-slate-400 uppercase tracking-wider block mb-1">
+          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-2.5 text-center">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-0.5">
               Multas 9º (3€)
             </span>
             <strong className="font-display text-lg font-bold text-red-400">
@@ -73,8 +76,8 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
             </strong>
           </div>
 
-          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-3 text-center">
-            <span className="text-[11px] text-slate-400 uppercase tracking-wider block mb-1">
+          <div className="rounded-xl bg-slate-900/80 border border-surface-border p-2.5 text-center">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider block mb-0.5">
               Multas 8º (2€)
             </span>
             <strong className="font-display text-lg font-bold text-orange-400">
@@ -84,17 +87,17 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
         </div>
 
         {/* Journey History */}
-        <div className="space-y-2">
+        <div className="space-y-2 flex-1 overflow-hidden flex flex-col">
           <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Historial por Jornada
+            Historial Jornada a Jornada
           </h4>
-          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto pr-1">
+          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 overflow-y-auto pr-1 flex-1 max-h-48 sm:max-h-56">
             {journeys.map(j => {
               const amount = Number(j.penalties?.[player.id] || 0);
               let badgeColor = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-              if (amount === 3.0) badgeColor = 'bg-red-500/15 text-red-400 border-red-500/30 font-bold';
-              else if (amount === 2.0) badgeColor = 'bg-orange-500/15 text-orange-400 border-orange-500/30 font-bold';
-              else if (amount === 1.0) badgeColor = 'bg-amber-500/15 text-amber-400 border-amber-500/30 font-bold';
+              if (amount === 3.0) badgeColor = 'bg-red-500/20 text-red-400 border-red-500/40 font-bold';
+              else if (amount === 2.0) badgeColor = 'bg-orange-500/20 text-orange-400 border-orange-500/40 font-bold';
+              else if (amount === 1.0) badgeColor = 'bg-amber-500/20 text-amber-400 border-amber-500/40 font-bold';
               else if (amount === 0.5) badgeColor = 'bg-slate-700 text-slate-300 border-slate-600';
 
               return (
@@ -103,7 +106,7 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
                   className={`flex flex-col items-center justify-center p-2 rounded-xl border text-xs ${badgeColor}`}
                 >
                   <span className="text-[10px] text-slate-400">J{j.journey}</span>
-                  <span className="font-display">{amount > 0 ? `${amount.toFixed(2)}€` : '0€'}</span>
+                  <span className="font-display font-semibold">{amount > 0 ? `${amount.toFixed(2)}€` : '0€'}</span>
                 </div>
               );
             })}
@@ -111,12 +114,12 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
         </div>
 
         {/* Footer Close Button */}
-        <div className="mt-6 pt-4 border-t border-surface-border flex justify-end">
+        <div className="mt-5 pt-3 border-t border-surface-border flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-colors"
           >
-            Cerrar
+            Cerrar Ficha
           </button>
         </div>
 
@@ -124,3 +127,4 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
     </div>
   );
 };
+

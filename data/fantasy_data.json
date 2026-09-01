@@ -4,30 +4,102 @@
   "totalJourneys": 38,
   "rules": {
     "penalties": [
-      { "position": 9, "label": "9º (Último)", "amount": 3.00, "badge": "🔴" },
-      { "position": 8, "label": "8º (Penúltimo)", "amount": 2.00, "badge": "🟠" },
-      { "position": 7, "label": "7º (Antepenúltimo)", "amount": 1.00, "badge": "🟡" },
-      { "position": 6, "label": "6º", "amount": 0.50, "badge": "⚪" }
+      {
+        "position": 9,
+        "label": "9º (Último)",
+        "amount": 3.00,
+        "badge": "🔴"
+      },
+      {
+        "position": 8,
+        "label": "8º (Penúltimo)",
+        "amount": 2.00,
+        "badge": "🟠"
+      },
+      {
+        "position": 7,
+        "label": "7º (Antepenúltimo)",
+        "amount": 1.00,
+        "badge": "🟡"
+      },
+      {
+        "position": 6,
+        "label": "6º",
+        "amount": 0.50,
+        "badge": "⚪"
+      }
     ],
     "safePositionsLabel": "1º al 5º = 0.00€",
     "journeyPot": 6.50,
     "estimatedFinalPot": 247.00
   },
   "participants": [
-    { "id": "joan", "name": "Joan", "avatar": "👑" },
-    { "id": "pablo", "name": "Pablo", "avatar": "⚡" },
-    { "id": "david", "name": "David", "avatar": "🎯" },
-    { "id": "josep", "name": "Josep", "avatar": "⚽" },
-    { "id": "ruben", "name": "Ruben", "avatar": "🔥" },
-    { "id": "jordi", "name": "Jordi", "avatar": "💎" },
-    { "id": "xarly", "name": "Xarly", "avatar": "🚀" },
-    { "id": "manu", "name": "Manu", "avatar": "🛡️" },
-    { "id": "sanfe", "name": "Sanfe", "avatar": "🦁" }
+    {
+      "id": "joan",
+      "name": "Joan",
+      "avatar": "👑"
+    },
+    {
+      "id": "pablo",
+      "name": "Pablo",
+      "avatar": "⚡"
+    },
+    {
+      "id": "david",
+      "name": "David",
+      "avatar": "🎯"
+    },
+    {
+      "id": "josep",
+      "name": "Josep",
+      "avatar": "⚽"
+    },
+    {
+      "id": "ruben",
+      "name": "Ruben",
+      "avatar": "🔥"
+    },
+    {
+      "id": "jordi",
+      "name": "Jordi",
+      "avatar": "💎"
+    },
+    {
+      "id": "xarly",
+      "name": "Xarly",
+      "avatar": "🚀"
+    },
+    {
+      "id": "manu",
+      "name": "Manu",
+      "avatar": "🛡️"
+    },
+    {
+      "id": "sanfe",
+      "name": "Sanfe",
+      "avatar": "🦁"
+    }
   ],
   "journeys": [
     {
       "journey": 1,
       "date": "2026-08-18",
+      "completed": true,
+      "penalties": {
+        "joan": 0.0,
+        "jordi": 0.0,
+        "josep": 0.0,
+        "pablo": 0.0,
+        "david": 0.0,
+        "ruben": 0.0,
+        "xarly": 0.0,
+        "manu": 0.0,
+        "sanfe": 0.0
+      }
+    },
+    {
+      "journey": 2,
+      "date": "2026-08-25",
       "completed": true,
       "penalties": {
         "joan": 3.0,
@@ -42,8 +114,8 @@
       }
     },
     {
-      "journey": 2,
-      "date": "2026-08-25",
+      "journey": 3,
+      "date": "2026-08-18",
       "completed": true,
       "penalties": {
         "sanfe": 3.0,

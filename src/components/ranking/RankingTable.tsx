@@ -20,12 +20,12 @@ export const RankingTable: React.FC<RankingTableProps> = ({
   );
 
   return (
-    <div className="rounded-2xl bg-surface/90 border border-surface-border p-6 shadow-md">
+    <div className="rounded-2xl bg-surface/90 border border-surface-border p-4 sm:p-6 shadow-md">
       
       {/* Header & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div>
-          <h2 className="font-display text-xl font-bold text-slate-100">
+          <h2 className="font-display text-lg sm:text-xl font-bold text-slate-100">
             Clasificación General del Bote
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
@@ -45,8 +45,93 @@ export const RankingTable: React.FC<RankingTableProps> = ({
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto -mx-6 px-6">
+      {/* Mobile Card-List View (< sm) */}
+      <div className="block sm:hidden space-y-2.5">
+        {filtered.length === 0 ? (
+          <div className="py-8 text-center text-xs text-slate-500">
+            No se encontraron resultados para "{search}"
+          </div>
+        ) : (
+          filtered.map(player => {
+            const percent = totalPot > 0 ? (player.totalPaid / totalPot) * 100 : 0;
+            const isLeader = player.rank === 1 && player.totalPaid > 0;
+            const isRata = player.honorificTitle === 'El Rata';
+
+            return (
+              <div
+                key={player.id}
+                onClick={() => onSelectPlayer(player)}
+                className={`p-3 rounded-2xl border transition-all active:scale-[0.98] cursor-pointer ${
+                  isLeader
+                    ? 'bg-amber-500/[0.08] border-amber-500/30 shadow-sm'
+                    : isRata
+                    ? 'bg-emerald-500/[0.04] border-emerald-500/25'
+                    : 'bg-slate-900/60 border-slate-800/80 hover:bg-slate-800/40'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2.5">
+                    {/* Rank Badge */}
+                    <span
+                      className={`inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-display font-bold ${
+                        isLeader
+                          ? 'bg-amber-500 text-slate-950 font-black'
+                          : player.rank === 2
+                          ? 'bg-slate-700 text-slate-200'
+                          : player.rank === 3
+                          ? 'bg-amber-900/60 text-amber-200 border border-amber-800/60'
+                          : isRata
+                          ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                          : 'bg-slate-800 text-slate-400'
+                      }`}
+                    >
+                      {player.rank}º
+                    </span>
+                    <span className="text-xl">{player.avatar}</span>
+                    <div>
+                      <strong className="text-sm text-slate-100 block font-semibold">{player.name}</strong>
+                      {isLeader ? (
+                        <span className="text-[10px] text-amber-400 font-extrabold flex items-center gap-0.5">
+                          <Crown className="w-2.5 h-2.5" /> PAGA LA COCA
+                        </span>
+                      ) : isRata ? (
+                        <span className="text-[10px] text-emerald-400 font-bold flex items-center gap-0.5">
+                          <Shield className="w-2.5 h-2.5" /> EL RATA (0€)
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="font-display font-black text-base text-slate-100 block">
+                      {player.totalPaid.toFixed(2)}€
+                    </span>
+                    <span className="text-[11px] text-slate-400 font-mono">
+                      {percent.toFixed(1)}% bote
+                    </span>
+                  </div>
+                </div>
+
+                {/* Micro Penalty Badges on Mobile */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-800/50 text-[10px]">
+                  <div className="flex items-center gap-1.5 font-mono">
+                    <span className="px-1.5 py-0.5 rounded bg-red-500/15 text-red-400">3€:{player.penaltyCounts.p3}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-orange-500/15 text-orange-400">2€:{player.penaltyCounts.p2}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400">1€:{player.penaltyCounts.p1}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">.5€:{player.penaltyCounts.p05}</span>
+                  </div>
+                  <span className="text-amber-400/80 font-semibold flex items-center gap-0.5 text-[10px]">
+                    Ver historial <ChevronRight className="w-3 h-3" />
+                  </span>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop Table View (>= sm) */}
+      <div className="hidden sm:block overflow-x-auto -mx-6 px-6">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-surface-border text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -54,7 +139,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
               <th className="py-3 px-3">Participante</th>
               <th className="py-3 px-3 text-right">Total Deuda</th>
               <th className="py-3 px-3 text-center">% Bote</th>
-              <th className="py-3 px-3 text-center hidden md:table-cell">Sanciones (3€ · 2€ · 1€ · 0.5€)</th>
+              <th className="py-3 px-3 text-center">Sanciones (3€ · 2€ · 1€ · 0.5€)</th>
               <th className="py-3 px-3 text-center">Título</th>
               <th className="py-3 px-3 w-10"></th>
             </tr>
@@ -88,7 +173,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     <td className="py-3.5 px-3 text-center">
                       <span
                         className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-display font-bold ${
-                          player.rank === 1 && player.totalPaid > 0
+                          isLeader
                             ? 'bg-amber-500 text-slate-950 shadow-sm'
                             : player.rank === 2
                             ? 'bg-slate-700 text-slate-200'
@@ -138,7 +223,7 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     </td>
 
                     {/* Penalty breakdown */}
-                    <td className="py-3.5 px-3 text-center hidden md:table-cell">
+                    <td className="py-3.5 px-3 text-center">
                       <div className="inline-flex items-center gap-1.5 text-xs font-mono">
                         <span className="px-2 py-0.5 rounded bg-red-500/10 text-red-400 border border-red-500/20" title="Multas de 3.00€">
                           3€: {player.penaltyCounts.p3}
@@ -184,3 +269,4 @@ export const RankingTable: React.FC<RankingTableProps> = ({
     </div>
   );
 };
+

@@ -40,7 +40,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-slate-100 selection:bg-amber-500/30 selection:text-amber-300">
-      
+
       {/* Navigation */}
       <Navbar
         activeTab={activeTab}
@@ -51,10 +51,10 @@ export const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-8">
-        
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8 pb-24 md:pb-8">
+
         {activeTab === 'dashboard' && (
-          <div className="space-y-8 animate-fade-in">
+          <div className="space-y-6 sm:space-y-8 animate-fade-in">
             <KpiCards stats={stats.globalStats} />
             <Podium ranking={stats.ranking} onSelectPlayer={setSelectedPlayer} />
             <RankingTable
@@ -65,6 +65,12 @@ export const App: React.FC = () => {
           </div>
         )}
 
+        {activeTab === 'journeys' && (
+          <div className="animate-fade-in space-y-6">
+            <JourneyView data={data} stats={stats} />
+          </div>
+        )}
+
         {activeTab === 'ranking' && (
           <div className="animate-fade-in space-y-6">
             <RankingTable
@@ -72,12 +78,6 @@ export const App: React.FC = () => {
               totalPot={stats.globalStats.totalPot}
               onSelectPlayer={setSelectedPlayer}
             />
-          </div>
-        )}
-
-        {activeTab === 'journeys' && (
-          <div className="animate-fade-in">
-            <JourneyView data={data} stats={stats} />
           </div>
         )}
 
