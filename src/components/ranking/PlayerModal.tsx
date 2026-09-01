@@ -28,8 +28,8 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
 
         {/* Player Header */}
         <div className="flex items-center gap-3.5 mb-5">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-800/90 border border-slate-700 flex items-center justify-center text-3xl shadow-inner">
-            {player.avatar}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-slate-800 border border-amber-500/30 flex items-center justify-center font-display font-black text-xl sm:text-2xl text-amber-300 shadow-inner">
+            {player.name.slice(0, 2).toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-2">

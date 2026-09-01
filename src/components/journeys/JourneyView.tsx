@@ -129,7 +129,9 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                         {/* Sticky Name */}
                         <td className="py-2.5 px-3.5 sticky left-0 bg-slate-900 z-10 font-medium text-slate-100 whitespace-nowrap shadow-[3px_0_6px_rgba(0,0,0,0.4)] min-w-[130px] sm:min-w-[150px] border-r border-slate-800">
                           <div className="flex items-center gap-2">
-                            <span className="text-base">{p.avatar}</span>
+                            <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                              {p.name.slice(0, 2).toUpperCase()}
+                            </div>
                             <span className="font-semibold text-slate-200">{p.name}</span>
                             {isLeader && <span className="text-[10px] text-amber-400 font-bold">👑</span>}
                             {isRata && <span className="text-[10px] text-emerald-400 font-bold">🛡️</span>}
@@ -280,7 +282,9 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                         className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800"
                       >
                         <div className="flex items-center gap-3">
-                          <span className="text-xl">{p.avatar}</span>
+                          <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300">
+                            {p.name.slice(0, 2).toUpperCase()}
+                          </div>
                           <div>
                             <strong className="text-sm text-slate-100 block">{p.name}</strong>
                             <span className={`inline-block text-[11px] px-2 py-0.5 rounded-full border mt-0.5 ${badgeStyle}`}>
@@ -310,7 +314,9 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                           key={p.id}
                           className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/40 border border-slate-800/80 text-xs text-slate-300"
                         >
-                          <span>{p.avatar}</span>
+                          <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center font-display font-bold text-[10px] text-slate-400">
+                            {p.name.slice(0, 2).toUpperCase()}
+                          </div>
                           <span className="font-medium truncate">{p.name}</span>
                           <span className="ml-auto text-emerald-400 text-[10px] font-bold">0€</span>
                         </div>

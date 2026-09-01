@@ -198,7 +198,7 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
             >
               <option value="">-- Seleccionar jugador --</option>
               {participants.map(p => (
-                <option key={p.id} value={p.id}>{p.avatar} {p.name}</option>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
           </div>
@@ -221,7 +221,7 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
             >
               <option value="">-- Seleccionar jugador --</option>
               {participants.map(p => (
-                <option key={p.id} value={p.id}>{p.avatar} {p.name}</option>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
           </div>
@@ -244,7 +244,7 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
             >
               <option value="">-- Seleccionar jugador --</option>
               {participants.map(p => (
-                <option key={p.id} value={p.id}>{p.avatar} {p.name}</option>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
           </div>
@@ -267,7 +267,7 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
             >
               <option value="">-- Seleccionar jugador --</option>
               {participants.map(p => (
-                <option key={p.id} value={p.id}>{p.avatar} {p.name}</option>
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
           </div>

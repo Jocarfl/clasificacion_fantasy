@@ -87,7 +87,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     >
                       {player.rank}º
                     </span>
-                    <span className="text-xl">{player.avatar}</span>
+                    <div className="w-8 h-8 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300">
+                      {player.name.slice(0, 2).toUpperCase()}
+                    </div>
                     <div>
                       <strong className="text-sm text-slate-100 block font-semibold">{player.name}</strong>
                       {isLeader ? (
@@ -191,7 +193,9 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                     {/* Participant Avatar & Name */}
                     <td className="py-3.5 px-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">{player.avatar}</span>
+                        <div className="w-8 h-8 rounded-xl bg-slate-800/90 border border-slate-700/80 flex items-center justify-center font-display font-bold text-xs text-slate-300 group-hover:border-amber-500/40 group-hover:text-amber-300 transition-colors">
+                          {player.name.slice(0, 2).toUpperCase()}
+                        </div>
                         <div>
                           <span className="font-semibold text-slate-100 group-hover:text-amber-300 transition-colors block">
                             {player.name}

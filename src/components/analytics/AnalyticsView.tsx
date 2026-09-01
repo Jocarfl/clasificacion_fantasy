@@ -214,7 +214,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
                   <div className="flex items-center justify-between text-xs mb-1.5">
                     <div className="flex items-center gap-2">
                       <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: player.totalPaid > 0 ? color : '#334155' }} />
-                      <span className="text-base">{player.avatar}</span>
+                      <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                        {player.name.slice(0, 2).toUpperCase()}
+                      </div>
                       <span className="font-bold text-slate-200">{player.name}</span>
                       {player.rank === 1 && player.totalPaid > 0 && (
                         <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 font-extrabold">LÍDER</span>
@@ -350,7 +352,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
                   <tr key={player.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="py-3 px-3 font-medium text-slate-200 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <span className="text-base">{player.avatar}</span>
+                        <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                          {player.name.slice(0, 2).toUpperCase()}
+                        </div>
                         <span className="font-semibold">{player.name}</span>
                       </div>
                     </td>

@@ -32,8 +32,8 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             className="w-full text-center group cursor-pointer transition-transform active:scale-95 focus:outline-none"
           >
             <div className="relative inline-block mb-1.5">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800 border border-slate-600 flex items-center justify-center text-xl sm:text-2xl shadow-md group-hover:border-slate-400 transition-colors">
-                {second?.avatar || '🥈'}
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-slate-700/60 to-slate-800 border border-slate-500/60 flex items-center justify-center font-display font-black text-sm sm:text-base text-slate-200 shadow-md group-hover:border-slate-400 transition-colors">
+                {second ? second.name.slice(0, 2).toUpperCase() : '2º'}
               </div>
               <span className="absolute -bottom-1.5 -right-1 px-1.5 py-0.2 rounded-full bg-slate-700 text-[9px] sm:text-[10px] font-bold text-slate-300 border border-slate-600">
                 2º
@@ -61,8 +61,8 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             className="w-full text-center group cursor-pointer transition-transform active:scale-95 focus:outline-none"
           >
             <div className="relative inline-block mb-1.5">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-b from-amber-500/20 to-slate-800 border-2 border-amber-500/50 flex items-center justify-center text-2xl sm:text-3xl shadow-lg shadow-amber-500/10 group-hover:border-amber-400 transition-colors">
-                {first?.avatar || '🥇'}
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-amber-500/30 to-amber-600/10 border-2 border-amber-500/60 flex items-center justify-center font-display font-black text-lg sm:text-xl text-amber-300 shadow-lg shadow-amber-500/10 group-hover:border-amber-400 transition-colors">
+                {first ? first.name.slice(0, 2).toUpperCase() : '1º'}
               </div>
               <span className="absolute -bottom-1.5 -right-1 px-2 py-0.2 rounded-full bg-amber-500 text-[9px] sm:text-[10px] font-extrabold text-slate-950 shadow-sm">
                 1º
@@ -87,8 +87,8 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             className="w-full text-center group cursor-pointer transition-transform active:scale-95 focus:outline-none"
           >
             <div className="relative inline-block mb-1.5">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-800 border border-amber-800/60 flex items-center justify-center text-xl sm:text-2xl shadow-md group-hover:border-amber-700 transition-colors">
-                {third?.avatar || '🥉'}
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-amber-900/40 to-slate-800 border border-amber-800/60 flex items-center justify-center font-display font-black text-sm sm:text-base text-amber-200 shadow-md group-hover:border-amber-700 transition-colors">
+                {third ? third.name.slice(0, 2).toUpperCase() : '3º'}
               </div>
               <span className="absolute -bottom-1.5 -right-1 px-1.5 py-0.2 rounded-full bg-amber-900/80 text-[9px] sm:text-[10px] font-bold text-amber-200 border border-amber-800">
                 3º
