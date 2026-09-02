@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'dashboard', label: 'Resumen', shortLabel: 'Inicio', icon: LayoutDashboard },
     { id: 'journeys', label: 'Jornadas', shortLabel: 'Jornadas', icon: Grid3X3 },
     { id: 'ranking', label: 'Clasificación', shortLabel: 'Tabla', icon: ListOrdered },
-    { id: 'payments', label: 'Pagos (4J)', shortLabel: 'Pagos', icon: CreditCard },
+    { id: 'payments', label: 'Pagos', shortLabel: 'Pagos', icon: CreditCard },
     { id: 'analytics', label: 'Estadísticas', shortLabel: 'Métricas', icon: BarChart3 },
     { id: 'admin', label: 'Añadir', shortLabel: 'Añadir', icon: PlusCircle, highlight: true }
   ];
