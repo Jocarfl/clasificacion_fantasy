@@ -255,7 +255,7 @@ export class DataService {
   }
 
   /**
-   * Generates a payment reminder summary for WhatsApp for a specific 4-journey settlement block.
+   * Generates a simplified payment reminder summary for WhatsApp for a specific 4-journey settlement block.
    */
   static generatePaymentWhatsAppSummary(data: LeagueData, blockId?: string): string {
     const { settlements } = this.calculateStats(data);
@@ -265,37 +265,37 @@ export class DataService {
 
     if (!targetBlock) return '';
 
-    let text = `💳 *LIQUIDACIÓN BOTE - ${targetBlock.label.toUpperCase()}*\n`;
-    text += `─────────────────────────\n`;
-    text += `Total a transferir en este tramo:\n\n`;
+    // Filtrar participantes con deuda en este tramo
+    const playersWithDebt = targetBlock.players.filter(p => p.debtInBlock > 0);
 
-    const pending = targetBlock.players.filter(p => !p.paid && p.debtInBlock > 0);
-    const paid = targetBlock.players.filter(p => p.paid && p.debtInBlock > 0);
-    const free = targetBlock.players.filter(p => p.debtInBlock === 0);
+    let text = `📢 *PAGOS FANTASY - ${targetBlock.label.toUpperCase()}*\n\n`;
 
-    if (pending.length > 0) {
-      text += `🔴 *PENDIENTES DE TRANSFERIR:*\n`;
-      pending.forEach(p => {
-        text += `• *${p.name}*: *${p.debtInBlock.toFixed(2)}€*\n`;
-      });
-      text += `\n`;
+    playersWithDebt.forEach(p => {
+      const icon = p.paid ? '✅' : '❌';
+      text += `${icon} *${p.name}*: ${p.debtInBlock.toFixed(2)}€\n`;
+    });
+
+    text += `\n📲 *Bizum a Josep*`;
+
+    return text.trimEnd();
+  }
+
+  /**
+   * Generates an individual payment reminder for WhatsApp for a specific player.
+   */
+  static generateIndividualPaymentReminder(
+    playerName: string,
+    debtInBlock: number,
+    blockLabel: string,
+    totalAccumulatedDebt: number
+  ): string {
+    let text = `👋 Hola *${playerName}*!\n\n`;
+    text += `Te paso el importe pendiente del bote de la Fantasy:\n`;
+    text += `💰 *${debtInBlock.toFixed(2)}€* correspondientes a *${blockLabel}*.\n\n`;
+    if (totalAccumulatedDebt > debtInBlock) {
+      text += `_(Llevas un total acumulado de sanciones de ${totalAccumulatedDebt.toFixed(2)}€ en la temporada)_\n\n`;
     }
-
-    if (paid.length > 0) {
-      text += `🟢 *PAGADOS / AL DÍA:*\n`;
-      paid.forEach(p => {
-        text += `• ~${p.name}~: ${p.debtInBlock.toFixed(2)}€ (Recibido ✓)\n`;
-      });
-      text += `\n`;
-    }
-
-    if (free.length > 0) {
-      text += `🛡️ *LIBRES DE MULTA (0.00€):*\n`;
-      text += free.map(p => p.name).join(', ') + `\n\n`;
-    }
-
-    text += `📊 *Recaudado en cuenta:* ${targetBlock.totalBlockCollected.toFixed(2)}€ / ${targetBlock.totalBlockDebt.toFixed(2)}€\n`;
-
+    text += `Por favor, haz la transferencia/Bizum cuando puedas para dejar el tramo al día. ¡Gracias! ⚽🍻`;
     return text;
   }
 

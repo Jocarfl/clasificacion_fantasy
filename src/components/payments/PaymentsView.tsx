@@ -7,9 +7,10 @@ interface PaymentsViewProps {
   data: LeagueData;
   stats: CalculatedStats;
   onShowToast: (msg: string) => void;
+  onTogglePayment: (blockId: string, playerId: string) => void;
 }
 
-export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowToast }) => {
+export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowToast, onTogglePayment }) => {
   const { settlements, globalStats } = stats;
 
   // Select first in-progress/completed settlement by default
@@ -23,7 +24,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
     const text = DataService.generatePaymentWhatsAppSummary(data, activeSettlement.id);
     try {
       await navigator.clipboard.writeText(text);
-      onShowToast('✓ Resumen de cobros para WhatsApp copiado al portapapeles');
+      onShowToast('✓ Resumen del tramo para WhatsApp copiado al portapapeles');
     } catch {
       prompt('Copia el texto para WhatsApp:', text);
     }
@@ -43,14 +44,6 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
             Control y seguimiento de transferencias al fondo común en bloques de 4 fechas
           </p>
         </div>
-
-        <button
-          onClick={handleCopyWhatsApp}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 active:bg-emerald-500/40 border border-emerald-400/40 text-xs font-bold transition-all active:scale-95 shadow-sm self-start sm:self-auto"
-        >
-          <Share2 className="w-4 h-4" />
-          <span>Recordatorio WhatsApp</span>
-        </button>
       </div>
 
       {/* 3 Main Account Health Cards */}
@@ -195,15 +188,15 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-700 text-right">
+              <div className="p-2.5 sm:p-3 rounded-xl bg-slate-900 border border-slate-700 text-right">
                 <span className="text-[10px] uppercase font-bold text-slate-300 block">Recaudado</span>
-                <strong className="font-display text-base font-black text-emerald-400">
+                <strong className="font-display text-sm sm:text-base font-black text-emerald-400">
                   {activeSettlement.totalBlockCollected.toFixed(2)}€
                 </strong>
               </div>
-              <div className="p-3 rounded-xl bg-slate-900 border border-slate-700 text-right">
+              <div className="p-2.5 sm:p-3 rounded-xl bg-slate-900 border border-slate-700 text-right">
                 <span className="text-[10px] uppercase font-bold text-slate-300 block">Pendiente</span>
-                <strong className="font-display text-base font-black text-red-400">
+                <strong className="font-display text-sm sm:text-base font-black text-red-400">
                   {activeSettlement.totalBlockPending.toFixed(2)}€
                 </strong>
               </div>
@@ -249,25 +242,66 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
                       </div>
                     </div>
 
-                    {/* Status Badge */}
-                    <div>
+                    {/* Status Badge & Actions */}
+                    <div className="flex items-center gap-2">
                       {isFree ? (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold">
                           <ShieldCheck className="w-3.5 h-3.5" /> Libre (0€)
                         </span>
                       ) : isPaid ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/25 text-emerald-300 border border-emerald-400 text-xs font-black shadow-sm">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> PAGADO ✓
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onTogglePayment(activeSettlement.id, p.id);
+                            onShowToast(`Marcado como pendiente para ${p.name}`);
+                          }}
+                          title="Haz clic para marcar como pendiente de pago"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/35 text-emerald-300 border border-emerald-400 text-xs font-black shadow-sm transition-all active:scale-95 group/btn"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                          <span>PAGADO ✓</span>
+                        </button>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-500/30 text-red-200 border border-red-400 text-xs font-black shadow-sm">
-                          <AlertCircle className="w-3.5 h-3.5 text-red-400" /> DEBE {p.debtInBlock.toFixed(2)}€
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            onTogglePayment(activeSettlement.id, p.id);
+                            onShowToast(`✓ ¡Marcado como pagado para ${p.name}!`);
+                          }}
+                          title="Haz clic para marcar como pagado"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/30 hover:bg-red-500/45 text-red-200 border border-red-400 text-xs font-black shadow-sm transition-all active:scale-95 group/btn"
+                        >
+                          <AlertCircle className="w-4 h-4 text-red-400 group-hover/btn:scale-110 transition-transform" />
+                          <span>DEBE {p.debtInBlock.toFixed(2)}€</span>
+                          <span className="text-[10px] opacity-75 font-normal ml-0.5">(Marcar pagado)</span>
+                        </button>
                       )}
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* Bottom Action: Copy WhatsApp Summary */}
+            <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30">
+              <div>
+                <strong className="text-sm font-bold text-white block">
+                  ¿Listo para pedir al grupo?
+                </strong>
+                <span className="text-xs text-slate-300">
+                  Copia la lista con los checks actualizados (❌ debe / ✅ pagado) y la nota de Bizum a Josep.
+                </span>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleCopyWhatsApp}
+                title="Copiar lista de pagos para pegar en WhatsApp"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs transition-all active:scale-95 shadow-lg shadow-emerald-500/20 flex-shrink-0"
+              >
+                <Share2 className="w-4 h-4" />
+                <span>Copiar Mensaje para WhatsApp</span>
+              </button>
             </div>
           </div>
 
@@ -275,7 +309,7 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
           <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-3 text-xs text-slate-300">
             <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />
             <span>
-              Para actualizar el estado de quién ha transferido su parte, puedes marcarlo directamente desde la pestaña <strong>Añadir</strong> y guardar los cambios.
+              💡 Pulsa sobre <strong>DEBE / PAGADO</strong> en cualquier tarjeta para alternar el estado antes de copiar el texto para el grupo.
             </span>
           </div>
 
