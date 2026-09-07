@@ -25,6 +25,7 @@ export class DataService {
       participantMap.set(p.id, {
         id: p.id,
         name: p.name,
+        fantasyName: p.fantasyName || '',
         avatar: p.avatar || '⚽',
         totalPaid: 0,
         percentageOfPot: 0,
@@ -112,6 +113,7 @@ export class DataService {
         return {
           id: p.id,
           name: p.name,
+          fantasyName: p.fantasyName,
           avatar: p.avatar,
           debtInBlock,
           paid

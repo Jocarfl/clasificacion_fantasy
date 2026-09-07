@@ -179,12 +179,21 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                         {/* Sticky Name */}
                         <td className="py-2.5 px-3.5 sticky left-0 bg-slate-900 z-10 font-bold text-white whitespace-nowrap shadow-[3px_0_6px_rgba(0,0,0,0.5)] min-w-[130px] sm:min-w-[150px] border-r-2 border-slate-700">
                           <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-black text-[10px] text-white">
+                            <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-black text-[10px] text-white shrink-0">
                               {p.name.slice(0, 2).toUpperCase()}
                             </div>
-                            <span className="font-bold text-white">{p.name}</span>
-                            {isLeader && <span className="text-[10px] text-amber-400 font-bold">👑</span>}
-                            {isRata && <span className="text-[10px] text-emerald-400 font-bold">🛡️</span>}
+                            <div className="truncate">
+                              <div className="flex items-center gap-1">
+                                <span className="font-bold text-white leading-tight">{p.name}</span>
+                                {isLeader && <span className="text-[10px] text-amber-400 font-bold">👑</span>}
+                                {isRata && <span className="text-[10px] text-emerald-400 font-bold">🛡️</span>}
+                              </div>
+                              {p.fantasyName && (
+                                <span className="text-[10px] text-slate-400 block font-normal leading-tight truncate">
+                                  {p.fantasyName}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </td>
 
@@ -335,7 +344,12 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                             {p.name.slice(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <strong className="text-sm text-white block font-bold">{p.name}</strong>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <strong className="text-sm text-white block font-bold">{p.name}</strong>
+                              {p.fantasyName && (
+                                <span className="text-xs text-slate-400">({p.fantasyName})</span>
+                              )}
+                            </div>
                             <span className={`inline-block text-[11px] px-2 py-0.5 rounded-full border mt-0.5 ${badgeStyle}`}>
                               {posLabel}
                             </span>
@@ -361,10 +375,15 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                           key={p.id}
                           className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/60 border border-slate-700/80 text-xs text-slate-200"
                         >
-                          <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
+                          <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-600 flex items-center justify-center font-display font-bold text-[10px] text-slate-300 shrink-0">
                             {p.name.slice(0, 2).toUpperCase()}
                           </div>
-                          <span className="font-bold truncate text-white">{p.name}</span>
+                          <div className="truncate min-w-0">
+                            <span className="font-bold truncate text-white block leading-tight">{p.name}</span>
+                            {p.fantasyName && (
+                              <span className="text-[10px] text-slate-400 truncate block font-normal leading-tight">{p.fantasyName}</span>
+                            )}
+                          </div>
                           <span className="ml-auto text-emerald-400 text-xs font-black">0€</span>
                         </div>
                       );

@@ -37,46 +37,55 @@
     {
       "id": "joan",
       "name": "Joan",
+      "fantasyName": "LaManadaX",
       "avatar": "👑"
     },
     {
       "id": "pablo",
       "name": "Pablo",
+      "fantasyName": "Jose Breton F.C",
       "avatar": "⚡"
     },
     {
       "id": "david",
       "name": "David",
+      "fantasyName": "DCapilla",
       "avatar": "🎯"
     },
     {
       "id": "josep",
       "name": "Josep",
+      "fantasyName": "MiskoJons",
       "avatar": "⚽"
     },
     {
       "id": "ruben",
       "name": "Ruben",
+      "fantasyName": "xeresax",
       "avatar": "🔥"
     },
     {
       "id": "jordi",
       "name": "Jordi",
+      "fantasyName": "ChapoGusman19",
       "avatar": "💎"
     },
     {
       "id": "xarly",
       "name": "Xarly",
+      "fantasyName": "AHannahAlcalde",
       "avatar": "🚀"
     },
     {
       "id": "manu",
       "name": "Manu",
+      "fantasyName": "Adolfhitler TR",
       "avatar": "🛡️"
     },
     {
       "id": "sanfe",
       "name": "Sanfe",
+      "fantasyName": "Alexsanfe",
       "avatar": "🦁"
     }
   ],

@@ -1,6 +1,7 @@
 export interface Participant {
   id: string;
   name: string;
+  fantasyName?: string;
   avatar: string;
 }
 
@@ -53,6 +54,7 @@ export interface PenaltyCounts {
 export interface ParticipantStats {
   id: string;
   name: string;
+  fantasyName?: string;
   avatar: string;
   totalPaid: number;
   percentageOfPot: number;
@@ -91,6 +93,7 @@ export interface GlobalStats {
 export interface SettlementPlayerDetail {
   id: string;
   name: string;
+  fantasyName?: string;
   avatar: string;
   debtInBlock: number;
   paid: boolean;

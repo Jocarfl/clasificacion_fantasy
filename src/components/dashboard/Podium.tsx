@@ -42,6 +42,11 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             <h4 className="font-display font-black text-xs sm:text-sm text-slate-100 truncate group-hover:text-amber-300 transition-colors">
               {second?.name || '-'}
             </h4>
+            {second?.fantasyName && (
+              <span className="text-[10px] text-slate-400 block truncate font-medium -mt-0.5 mb-0.5">
+                {second.fantasyName}
+              </span>
+            )}
             <span className="text-[11px] sm:text-xs font-black text-slate-200">
               {second ? `${second.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>
@@ -71,6 +76,11 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             <h4 className="font-display font-black text-sm sm:text-base text-white truncate group-hover:text-amber-300 transition-colors">
               {first?.name || '-'}
             </h4>
+            {first?.fantasyName && (
+              <span className="text-[11px] text-amber-200/80 block truncate font-medium -mt-0.5 mb-0.5">
+                {first.fantasyName}
+              </span>
+            )}
             <span className="text-xs sm:text-sm font-black text-amber-300">
               {first ? `${first.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>
@@ -97,6 +107,11 @@ export const Podium: React.FC<PodiumProps> = ({ ranking, onSelectPlayer }) => {
             <h4 className="font-display font-black text-xs sm:text-sm text-slate-100 truncate group-hover:text-amber-300 transition-colors">
               {third?.name || '-'}
             </h4>
+            {third?.fantasyName && (
+              <span className="text-[10px] text-amber-500/90 block truncate font-medium -mt-0.5 mb-0.5">
+                {third.fantasyName}
+              </span>
+            )}
             <span className="text-[11px] sm:text-xs font-black text-slate-200">
               {third ? `${third.totalPaid.toFixed(2)}€` : '0.00€'}
             </span>

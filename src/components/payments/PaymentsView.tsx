@@ -231,7 +231,12 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
                         {p.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div>
-                        <strong className="text-sm font-bold text-white block">{p.name}</strong>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <strong className="text-sm font-bold text-white block">{p.name}</strong>
+                          {p.fantasyName && (
+                            <span className="text-xs text-slate-400">({p.fantasyName})</span>
+                          )}
+                        </div>
                         <span className="text-[11px] text-slate-300">
                           {isFree ? (
                             <span className="text-emerald-400 font-bold">0.00€ en este tramo</span>

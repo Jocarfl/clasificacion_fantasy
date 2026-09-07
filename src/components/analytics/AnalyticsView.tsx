@@ -218,6 +218,9 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
                         {player.name.slice(0, 2).toUpperCase()}
                       </div>
                       <span className="font-bold text-white">{player.name}</span>
+                      {player.fantasyName && (
+                        <span className="text-[11px] text-slate-400">({player.fantasyName})</span>
+                      )}
                       {player.rank === 1 && player.totalPaid > 0 && (
                         <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-black">LÍDER</span>
                       )}
@@ -355,7 +358,12 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({ stats }) => {
                         <div className="w-6 h-6 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center font-display font-bold text-[10px] text-slate-300">
                           {player.name.slice(0, 2).toUpperCase()}
                         </div>
-                        <span className="font-semibold">{player.name}</span>
+                        <div>
+                          <span className="font-semibold text-white block leading-tight">{player.name}</span>
+                          {player.fantasyName && (
+                            <span className="text-[10px] text-slate-400 block font-normal leading-tight">{player.fantasyName}</span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     

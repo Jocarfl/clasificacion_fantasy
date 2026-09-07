@@ -36,6 +36,11 @@ export const PlayerModal: React.FC<PlayerModalProps> = ({ player, journeys, onCl
               <h3 className="font-display text-xl sm:text-2xl font-black text-white">
                 {player.name}
               </h3>
+              {player.fantasyName && (
+                <span className="px-2.5 py-0.5 rounded-lg bg-amber-500/10 text-xs font-semibold text-amber-300 border border-amber-500/30">
+                  {player.fantasyName}
+                </span>
+              )}
               <span className="px-2.5 py-0.5 rounded-full bg-slate-800 text-xs font-black text-amber-300 border border-amber-400/50">
                 {player.rank}º Posición
               </span>

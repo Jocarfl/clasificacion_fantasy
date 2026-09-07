@@ -15,9 +15,10 @@ export const RankingTable: React.FC<RankingTableProps> = ({
 }) => {
   const [search, setSearch] = useState('');
 
-  const filtered = ranking.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase().trim())
-  );
+  const filtered = ranking.filter(p => {
+    const q = search.toLowerCase().trim();
+    return p.name.toLowerCase().includes(q) || (p.fantasyName && p.fantasyName.toLowerCase().includes(q));
+  });
 
   return (
     <div className="rounded-2xl bg-surface-card border border-surface-border p-4 sm:p-6 shadow-xl">
@@ -91,7 +92,12 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                       {player.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <strong className="text-sm text-white block font-bold">{player.name}</strong>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <strong className="text-sm text-white block font-bold">{player.name}</strong>
+                        {player.fantasyName && (
+                          <span className="text-xs text-amber-200/70 font-normal">({player.fantasyName})</span>
+                        )}
+                      </div>
                       {isLeader ? (
                         <span className="text-[10px] text-amber-300 font-black flex items-center gap-0.5">
                           <Crown className="w-3 h-3 text-amber-300" /> PAGA LA COCA
@@ -200,6 +206,11 @@ export const RankingTable: React.FC<RankingTableProps> = ({
                           <span className="font-bold text-white group-hover:text-amber-300 transition-colors block">
                             {player.name}
                           </span>
+                          {player.fantasyName && (
+                            <span className="text-xs text-slate-400 block font-normal">
+                              {player.fantasyName}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </td>
