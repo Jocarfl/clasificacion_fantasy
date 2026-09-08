@@ -220,7 +220,7 @@ export class DataService {
 
     if (specificJourney) {
       text += `📅 *MULTAS JORNADA ${jNum}*\n`;
-      const penaltiesList: { name: string; amount: number; label: string }[] = [];
+      const penaltiesList: { name: string; fantasyName?: string; amount: number; label: string }[] = [];
       Object.entries(specificJourney.penalties).forEach(([id, amt]) => {
         if (amt > 0) {
           const participant = data.participants.find(p => p.id === id);
@@ -228,13 +228,19 @@ export class DataService {
           if (amt === 3.0) label = '🔴 9º (3.00€)';
           else if (amt === 2.0) label = '🟠 8º (2.00€)';
           else if (amt === 1.0) label = '🟡 7º (1.00€)';
-          penaltiesList.push({ name: participant?.name || id, amount: amt, label });
+          penaltiesList.push({
+            name: participant?.name || id,
+            fantasyName: participant?.fantasyName,
+            amount: amt,
+            label
+          });
         }
       });
       penaltiesList.sort((a, b) => b.amount - a.amount);
 
       penaltiesList.forEach(p => {
-        text += `${p.label} ➔ *${p.name}*\n`;
+        const fantasyStr = p.fantasyName ? ` (${p.fantasyName})` : '';
+        text += `${p.label} ➔ *${p.name}*${fantasyStr}\n`;
       });
       text += `\n`;
     }
@@ -246,7 +252,8 @@ export class DataService {
       else if (p.rank === 2) icon = '🥈 2º';
       else if (p.rank === 3) icon = '🥉 3º';
 
-      text += `${icon} *${p.name}*: ${p.totalPaid.toFixed(2)}€ _(${p.percentageOfPot.toFixed(1)}%)_\n`;
+      const fantasyStr = p.fantasyName ? ` (${p.fantasyName})` : '';
+      text += `${icon} *${p.name}*${fantasyStr}: ${p.totalPaid.toFixed(2)}€ _(${p.percentageOfPot.toFixed(1)}%)_\n`;
     });
 
     text += `\n📊 *BOTE ACUMULADO:* ${globalStats.totalPot.toFixed(2)}€ / ${globalStats.estimatedFinalPot.toFixed(0)}€ (${globalStats.progressPercent.toFixed(1)}%)\n`;
@@ -273,7 +280,8 @@ export class DataService {
 
     playersWithDebt.forEach(p => {
       const icon = p.paid ? '✅' : '❌';
-      text += `${icon} *${p.name}*: ${p.debtInBlock.toFixed(2)}€\n`;
+      const fantasyStr = p.fantasyName ? ` (${p.fantasyName})` : '';
+      text += `${icon} *${p.name}*${fantasyStr}: ${p.debtInBlock.toFixed(2)}€\n`;
     });
 
     text += `\n📲 *Bizum a Josep*\n`;
