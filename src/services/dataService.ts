@@ -242,16 +242,15 @@ export class DataService {
     text += `👑 *TOP CLASIFICACIÓN BOTE (J${globalStats.computedJourneys}/${globalStats.totalJourneysCount})*\n`;
     ranking.forEach(p => {
       let icon = `${p.rank}º`;
-      if (p.rank === 1 && p.totalPaid > 0) icon = '🥇 1º (Paga la coca)';
+      if (p.rank === 1) icon = '🥇 1º';
       else if (p.rank === 2) icon = '🥈 2º';
       else if (p.rank === 3) icon = '🥉 3º';
-      else if (p.honorificTitle === 'El Rata') icon = `🛡️ ${p.rank}º (El Rata)`;
 
       text += `${icon} *${p.name}*: ${p.totalPaid.toFixed(2)}€ _(${p.percentageOfPot.toFixed(1)}%)_\n`;
     });
 
     text += `\n📊 *BOTE ACUMULADO:* ${globalStats.totalPot.toFixed(2)}€ / ${globalStats.estimatedFinalPot.toFixed(0)}€ (${globalStats.progressPercent.toFixed(1)}%)\n`;
-    text += `💳 *INGRESADO EN CUENTA:* ${globalStats.totalCollectedInBank.toFixed(2)}€ | *PENDIENTE:* ${globalStats.totalPendingCollection.toFixed(2)}€\n`;
+    text += `\n🌐 https://jocarfl.github.io/clasificacion_fantasy/\n`;
 
     return text;
   }
@@ -277,7 +276,8 @@ export class DataService {
       text += `${icon} *${p.name}*: ${p.debtInBlock.toFixed(2)}€\n`;
     });
 
-    text += `\n📲 *Bizum a Josep*`;
+    text += `\n📲 *Bizum a Josep*\n`;
+    text += `🌐 https://jocarfl.github.io/clasificacion_fantasy/`;
 
     return text.trimEnd();
   }
