@@ -7,10 +7,9 @@ interface PaymentsViewProps {
   data: LeagueData;
   stats: CalculatedStats;
   onShowToast: (msg: string) => void;
-  onTogglePayment: (blockId: string, playerId: string) => void;
 }
 
-export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowToast, onTogglePayment }) => {
+export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowToast }) => {
   const { settlements, globalStats } = stats;
 
   // Select first in-progress/completed settlement by default
@@ -247,39 +246,23 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
                       </div>
                     </div>
 
-                    {/* Status Badge & Actions */}
+                    {/* Status Badge - Visual & Informative */}
                     <div className="flex items-center gap-2">
                       {isFree ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold">
-                          <ShieldCheck className="w-3.5 h-3.5" /> Libre (0€)
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700/80 text-xs font-semibold">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Libre (0€)</span>
                         </span>
                       ) : isPaid ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onTogglePayment(activeSettlement.id, p.id);
-                            onShowToast(`Marcado como pendiente para ${p.name}`);
-                          }}
-                          title="Haz clic para marcar como pendiente de pago"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/25 hover:bg-emerald-500/35 text-emerald-300 border border-emerald-400 text-xs font-black shadow-sm transition-all active:scale-95 group/btn"
-                        >
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-xs font-black">
                           <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                           <span>PAGADO ✓</span>
-                        </button>
+                        </span>
                       ) : (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            onTogglePayment(activeSettlement.id, p.id);
-                            onShowToast(`✓ ¡Marcado como pagado para ${p.name}!`);
-                          }}
-                          title="Haz clic para marcar como pagado"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/30 hover:bg-red-500/45 text-red-200 border border-red-400 text-xs font-black shadow-sm transition-all active:scale-95 group/btn"
-                        >
-                          <AlertCircle className="w-4 h-4 text-red-400 group-hover/btn:scale-110 transition-transform" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-500/20 text-red-200 border border-red-400/40 text-xs font-black">
+                          <AlertCircle className="w-4 h-4 text-red-400" />
                           <span>DEBE {p.debtInBlock.toFixed(2)}€</span>
-                          <span className="text-[10px] opacity-75 font-normal ml-0.5">(Marcar pagado)</span>
-                        </button>
+                        </span>
                       )}
                     </div>
                   </div>
@@ -311,10 +294,10 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
           </div>
 
           {/* Info Footer */}
-          <div className="p-3.5 rounded-xl bg-slate-900 border border-slate-700/80 flex items-center gap-3 text-xs text-slate-300">
+          <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-700/80 flex items-center gap-3 text-xs text-slate-300">
             <Clock className="w-4 h-4 text-amber-400 flex-shrink-0" />
             <span>
-              💡 Pulsa sobre <strong>DEBE / PAGADO</strong> en cualquier tarjeta para alternar el estado antes de copiar el texto para el grupo.
+              ℹ️ Estado oficial de transferencias. Josep actualiza los pagos confirmados tras recibir cada Bizum.
             </span>
           </div>
 

@@ -14,49 +14,13 @@ import { PaymentsView } from './components/payments/PaymentsView';
 import { JourneySnippetGenerator } from './components/admin/JourneySnippetGenerator';
 
 export const App: React.FC = () => {
-  const [data, setData] = useState<LeagueData>(initialLeagueData as unknown as LeagueData);
+  const data: LeagueData = initialLeagueData as unknown as LeagueData;
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedPlayer, setSelectedPlayer] = useState<ParticipantStats | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Compute live stats
   const stats = DataService.calculateStats(data);
-
-  const handleTogglePlayerPayment = (blockId: string, playerId: string) => {
-    setData(prev => {
-      const prevSettlements = prev.settlements ? [...prev.settlements] : [];
-      // If no settlements yet in data, build default blocks
-      const existingBlockIndex = prevSettlements.findIndex(s => s.id === blockId);
-      if (existingBlockIndex >= 0) {
-        const block = { ...prevSettlements[existingBlockIndex] };
-        const currentPaid = block.paidStatus?.[playerId] ?? false;
-        block.paidStatus = {
-          ...block.paidStatus,
-          [playerId]: !currentPaid
-        };
-        prevSettlements[existingBlockIndex] = block;
-      } else {
-        // Find in calculated stats
-        const calc = stats.settlements.find(s => s.id === blockId);
-        if (calc) {
-          prevSettlements.push({
-            id: calc.id,
-            label: calc.label,
-            startJourney: calc.startJourney,
-            endJourney: calc.endJourney,
-            paidStatus: {
-              [playerId]: true
-            }
-          });
-        }
-      }
-
-      return {
-        ...prev,
-        settlements: prevSettlements
-      };
-    });
-  };
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -124,7 +88,6 @@ export const App: React.FC = () => {
               data={data}
               stats={stats}
               onShowToast={showToast}
-              onTogglePayment={handleTogglePlayerPayment}
             />
           </div>
         )}

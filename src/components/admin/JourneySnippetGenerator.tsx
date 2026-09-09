@@ -83,6 +83,20 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
     }
   };
 
+  const handleCopyPaymentsWhatsApp = async () => {
+    const clone: LeagueData = {
+      ...data,
+      settlements: localSettlements
+    };
+    const text = DataService.generatePaymentWhatsAppSummary(clone, activeSettlementId);
+    try {
+      await navigator.clipboard.writeText(text);
+      onShowToast('✓ Resumen del tramo para WhatsApp copiado al portapapeles');
+    } catch {
+      prompt('Copia para WhatsApp:', text);
+    }
+  };
+
   // Validation
   const selected = [pos9, pos8, pos7, pos6].filter(Boolean);
   const hasDuplicates = selected.some((item, idx) => selected.indexOf(item) !== idx);
@@ -288,8 +302,19 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
                 </div>
 
                 {/* Actions for Payments */}
-                <div className="pt-4 border-t border-slate-700 flex items-center justify-end">
+                <div className="pt-4 border-t border-slate-700 flex flex-col sm:flex-row items-center justify-end gap-3">
                   <button
+                    type="button"
+                    onClick={handleCopyPaymentsWhatsApp}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-2.5 px-5 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-semibold text-xs transition-all hover:bg-emerald-500/30 active:scale-95"
+                    title="Copiar mensaje de pagos de este tramo para WhatsApp"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Copiar WhatsApp Tramo</span>
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={handleCopyPaymentsJson}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl bg-amber-400 text-slate-950 font-black text-xs hover:bg-amber-300 active:scale-95 transition-all shadow-md shadow-amber-500/20"
                     title="Copiar bloque de liquidaciones para pegar en data/fantasy_data.json"
