@@ -62,8 +62,11 @@ export class DataService {
     const totalPot = Array.from(participantMap.values()).reduce((sum, p) => sum + p.totalPaid, 0);
 
     // 4-Journey Settlement Blocks Calculation
-    const settlementBlocks: SettlementBlock[] = data.settlements && data.settlements.length > 0
-      ? data.settlements
+    const normalizedSettlements = data.settlements && data.settlements.length > 0
+      ? (Array.isArray(data.settlements[0]) ? (data.settlements as unknown as SettlementBlock[][]).flat() : data.settlements)
+      : null;
+    const settlementBlocks: SettlementBlock[] = normalizedSettlements && normalizedSettlements.length > 0
+      ? normalizedSettlements
       : Array.from({ length: Math.ceil(totalJourneysCount / 4) }, (_, idx) => {
           const start = idx * 4 + 1;
           const end = Math.min(totalJourneysCount, (idx + 1) * 4);

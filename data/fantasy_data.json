@@ -156,9 +156,8 @@
     }
   ],
   "settlements": [
-    [
-      {
-        "id": "tramo-1",
+    {
+      "id": "tramo-1",
         "label": "Tramo 1 (J1 - J4)",
         "startJourney": 1,
         "endJourney": 4,
@@ -327,6 +326,5 @@
           "sanfe": false
         }
       }
-    ]
   ]
 }

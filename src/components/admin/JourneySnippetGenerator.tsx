@@ -44,7 +44,8 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
   // Local settlements clone for editing
   const [localSettlements, setLocalSettlements] = useState<SettlementBlock[]>(() => {
     if (data.settlements && data.settlements.length > 0) {
-      return JSON.parse(JSON.stringify(data.settlements));
+      const list = Array.isArray(data.settlements[0]) ? (data.settlements as unknown as SettlementBlock[][]).flat() : data.settlements;
+      return JSON.parse(JSON.stringify(list));
     }
     return calculated.settlements.map(s => ({
       id: s.id,
