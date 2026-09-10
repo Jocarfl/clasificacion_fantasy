@@ -75,12 +75,22 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
   };
 
   const handleCopyPaymentsJson = async () => {
-    const jsonStr = JSON.stringify(localSettlements, null, 2);
+    const currentBlock = localSettlements.find(s => s.id === activeSettlementId) || localSettlements[0];
+    const statusMap: Record<string, boolean> = {};
+    participants.forEach(p => {
+      statusMap[p.id] = currentBlock?.paidStatus?.[p.id] ?? false;
+    });
+
+    const formattedEntries = Object.entries(statusMap)
+      .map(([k, v]) => `        "${k}": ${v}`)
+      .join(',\n');
+    const snippet = `      "paidStatus": {\n${formattedEntries}\n      }`;
+
     try {
-      await navigator.clipboard.writeText(jsonStr);
-      onShowToast('✓ Bloque "settlements" copiado. Pégalo en data/fantasy_data.json');
+      await navigator.clipboard.writeText(snippet);
+      onShowToast(`✓ "paidStatus" de ${currentBlock?.label || 'tramo'} copiado al portapapeles`);
     } catch {
-      prompt('Copia los settlements:', jsonStr);
+      prompt('Copia el paidStatus:', snippet);
     }
   };
 
@@ -318,7 +328,7 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
                     type="button"
                     onClick={handleCopyPaymentsJson}
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl bg-amber-400 text-slate-950 font-black text-xs hover:bg-amber-300 active:scale-95 transition-all shadow-md shadow-amber-500/20"
-                    title="Copiar bloque de liquidaciones para pegar en data/fantasy_data.json"
+                    title="Copiar bloque paidStatus de este tramo para reemplazarlo en data/fantasy_data.json"
                   >
                     <Copy className="w-4 h-4" />
                     <span>Copiar JSON Pagos</span>
