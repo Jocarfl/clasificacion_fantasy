@@ -266,7 +266,7 @@ export class DataService {
       else if (p.rank === 3) icon = '🥉 3º';
 
       const fantasyStr = p.fantasyName ? ` (${p.fantasyName})` : '';
-      text += `${icon} *${p.name}*${fantasyStr}: ${p.totalPaid.toFixed(2)}€ _(${p.percentageOfPot.toFixed(1)}%)_\n`;
+      text += `${icon} *${p.name}*${fantasyStr}: ${p.totalPaid.toFixed(2)}€\n`;
     });
 
     text += `\n📊 *BOTE ACUMULADO:* ${globalStats.totalPot.toFixed(2)}€ / ${globalStats.estimatedFinalPot.toFixed(0)}€ (${globalStats.progressPercent.toFixed(1)}%)\n`;
