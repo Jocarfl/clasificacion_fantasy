@@ -19,12 +19,18 @@ export interface Rules {
   estimatedFinalPot: number;
 }
 
+export type JourneyStatus = 'completed' | 'paused' | 'pending';
+
 export interface JourneyRecord {
   journey: number;
   date?: string;
   completed: boolean;
+  status?: JourneyStatus;
+  pausedReason?: string;
+  rescheduledDate?: string;
   penalties: Record<string, number>;
 }
+
 
 export interface SettlementBlock {
   id: string;
@@ -88,6 +94,7 @@ export interface GlobalStats {
   leader: LeaderSummary | null;
   ratas: LeaderSummary[];
   lastUpdatedJourney: number;
+  pausedJourneys: number[];
 }
 
 export interface SettlementPlayerDetail {

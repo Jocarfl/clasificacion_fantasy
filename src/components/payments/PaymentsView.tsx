@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, CheckCircle2, AlertCircle, ShieldCheck, Share2, Clock, Wallet } from 'lucide-react';
+import { CreditCard, CheckCircle2, AlertCircle, ShieldCheck, Share2, Clock, Wallet, PauseCircle } from 'lucide-react';
 import { LeagueData, CalculatedStats } from '../../types/fantasy';
 import { DataService } from '../../services/dataService';
 
@@ -120,6 +120,9 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
             const isSelected = s.id === selectedBlockId;
             const isFullyPaid = s.totalBlockDebt > 0 && s.totalBlockPending === 0;
             const hasPending = s.totalBlockPending > 0;
+            const hasPausedInBlock = (data.journeys || []).some(
+              j => j.status === 'paused' && j.journey >= s.startJourney && j.journey <= s.endJourney
+            );
 
             return (
               <button
@@ -135,7 +138,11 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
                   <span className={`text-xs font-black ${isSelected ? 'text-amber-300' : 'text-white'}`}>
                     Tramo {idx + 1}
                   </span>
-                  {isFullyPaid ? (
+                  {hasPausedInBlock ? (
+                    <span className="text-[10px] px-1 rounded bg-amber-500/30 text-amber-300 font-bold" title="Contiene jornada pausada">
+                      ⏸️ Pausa
+                    </span>
+                  ) : isFullyPaid ? (
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm" title="Cobrado al 100%" />
                   ) : hasPending ? (
                     <span className="w-2.5 h-2.5 rounded-full bg-red-400 animate-pulse" title="Pendiente de pago" />
@@ -150,7 +157,9 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
 
                 <div className="mt-2 pt-1.5 border-t border-slate-700/60 flex items-center justify-between text-[11px] font-bold">
                   <span className="text-white">{s.totalBlockDebt.toFixed(2)}€</span>
-                  {isFullyPaid ? (
+                  {hasPausedInBlock ? (
+                    <span className="text-amber-300 text-[10px]">Pausado</span>
+                  ) : isFullyPaid ? (
                     <span className="text-emerald-400 text-[10px]">✓ Cobrado</span>
                   ) : hasPending ? (
                     <span className="text-red-400 text-[10px]">-{s.totalBlockPending.toFixed(2)}€</span>
@@ -165,26 +174,44 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
       </div>
 
       {/* Active Settlement Spotlight Card */}
-      {activeSettlement && (
-        <div className="rounded-2xl bg-surface-card border border-surface-border p-5 sm:p-6 shadow-xl space-y-5">
-          
-          {/* Header of Active Tramo */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700 pb-4 gap-3">
-            <div>
-              <span className="text-xs font-black uppercase tracking-wider text-amber-300">
-                {activeSettlement.isCompleted
-                  ? 'Tramo Finalizado (Listo para Cobro)'
-                  : activeSettlement.isInProgress
-                  ? 'Tramo en Curso'
-                  : 'Tramo Futuro'}
-              </span>
-              <h3 className="font-display text-2xl font-black text-white">
-                {activeSettlement.label}
-              </h3>
-              <p className="text-xs text-slate-300 mt-0.5">
-                Total acumulado en este bloque: <strong className="text-amber-300">{activeSettlement.totalBlockDebt.toFixed(2)}€</strong>
-              </p>
-            </div>
+      {activeSettlement && (() => {
+        const pausedInBlock = (data.journeys || []).filter(
+          j => j.status === 'paused' && j.journey >= activeSettlement.startJourney && j.journey <= activeSettlement.endJourney
+        );
+
+        return (
+          <div className="rounded-2xl bg-surface-card border border-surface-border p-5 sm:p-6 shadow-xl space-y-5">
+            
+            {/* Paused warning if block contains paused journeys */}
+            {pausedInBlock.length > 0 && (
+              <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 text-xs text-amber-300">
+                <PauseCircle className="w-4 h-4 flex-shrink-0 text-amber-400 mt-0.5" />
+                <div>
+                  <strong>Jornada {pausedInBlock.map(j => `J${j.journey}`).join(', ')} aplazada:</strong>{' '}
+                  Este tramo tiene partidos pendientes de disputa. Las sanciones correspondientes se incorporarán una vez se jueguen.
+                </div>
+              </div>
+            )}
+
+            {/* Header of Active Tramo */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700 pb-4 gap-3">
+              <div>
+                <span className="text-xs font-black uppercase tracking-wider text-amber-300">
+                  {pausedInBlock.length > 0
+                    ? 'Tramo con Jornada Pausada (Aplazada)'
+                    : activeSettlement.isCompleted
+                    ? 'Tramo Finalizado (Listo para Cobro)'
+                    : activeSettlement.isInProgress
+                    ? 'Tramo en Curso'
+                    : 'Tramo Futuro'}
+                </span>
+                <h3 className="font-display text-2xl font-black text-white">
+                  {activeSettlement.label}
+                </h3>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  Total acumulado en este bloque: <strong className="text-amber-300">{activeSettlement.totalBlockDebt.toFixed(2)}€</strong>
+                </p>
+              </div>
 
             <div className="flex items-center gap-3">
               <div className="p-2.5 sm:p-3 rounded-xl bg-slate-900 border border-slate-700 text-right">
@@ -302,7 +329,8 @@ export const PaymentsView: React.FC<PaymentsViewProps> = ({ data, stats, onShowT
           </div>
 
         </div>
-      )}
+        );
+      })()}
 
     </div>
   );

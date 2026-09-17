@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, AlertCircle, Sparkles, MessageCircle, CreditCard, CheckCircle2 } from 'lucide-react';
+import { Copy, Check, AlertCircle, Sparkles, MessageCircle, CreditCard, CheckCircle2, PauseCircle } from 'lucide-react';
 import { LeagueData, SettlementBlock } from '../../types/fantasy';
 import { DataService } from '../../services/dataService';
 
@@ -16,17 +16,19 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
   const participants = data.participants || [];
   const totalJourneys = data.totalJourneys || 38;
 
-  // Find next pending journey
+  // Find next pending journey (not yet registered)
   const nextJourneyNum = (() => {
-    const played = data.journeys?.filter(j => j.completed).map(j => j.journey) || [];
+    const registered = data.journeys?.map(j => j.journey) || [];
     for (let i = 1; i <= totalJourneys; i++) {
-      if (!played.includes(i)) return i;
+      if (!registered.includes(i)) return i;
     }
     return totalJourneys;
   })();
 
   const [journeyNum, setJourneyNum] = useState<number>(nextJourneyNum);
   const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [pausedReason, setPausedReason] = useState<string>('Partido aplazado pendiente de disputa');
   const [pos9, setPos9] = useState<string>('');
   const [pos8, setPos8] = useState<string>('');
   const [pos7, setPos7] = useState<string>('');
@@ -111,23 +113,29 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
   // Validation
   const selected = [pos9, pos8, pos7, pos6].filter(Boolean);
   const hasDuplicates = selected.some((item, idx) => selected.indexOf(item) !== idx);
-  const isComplete = selected.length === 4 && !hasDuplicates;
+  const isComplete = isPaused
+    ? pausedReason.trim().length > 0
+    : selected.length === 4 && !hasDuplicates;
 
   // Build penalties map
   const buildPenalties = () => {
     const penalties: Record<string, number> = {};
     participants.forEach(p => {
-      if (p.id === pos9) penalties[p.id] = 3.0;
-      else if (p.id === pos8) penalties[p.id] = 2.0;
-      else if (p.id === pos7) penalties[p.id] = 1.0;
-      else if (p.id === pos6) penalties[p.id] = 0.5;
-      else penalties[p.id] = 0.0;
+      if (!isPaused) {
+        if (p.id === pos9) penalties[p.id] = 3.0;
+        else if (p.id === pos8) penalties[p.id] = 2.0;
+        else if (p.id === pos7) penalties[p.id] = 1.0;
+        else if (p.id === pos6) penalties[p.id] = 0.5;
+        else penalties[p.id] = 0.0;
+      } else {
+        penalties[p.id] = 0.0;
+      }
     });
     return penalties;
   };
 
   const getSnippet = () => {
-    return DataService.generateJourneyJsonSnippet(journeyNum, buildPenalties(), date);
+    return DataService.generateJourneyJsonSnippet(journeyNum, buildPenalties(), date, isPaused, pausedReason);
   };
 
   const handleCopyJson = async () => {
@@ -146,7 +154,14 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
     if (!isComplete) return;
     const clone: LeagueData = JSON.parse(JSON.stringify(data));
     const idx = clone.journeys.findIndex(j => j.journey === journeyNum);
-    const newRecord = { journey: journeyNum, date, completed: true, penalties: buildPenalties() };
+    const newRecord = {
+      journey: journeyNum,
+      date,
+      completed: !isPaused,
+      status: isPaused ? ('paused' as const) : ('completed' as const),
+      ...(isPaused && pausedReason ? { pausedReason } : {}),
+      penalties: buildPenalties()
+    };
     if (idx >= 0) clone.journeys[idx] = newRecord;
     else clone.journeys.push(newRecord);
 
@@ -357,10 +372,15 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
               >
                 {Array.from({ length: totalJourneys }, (_, i) => {
                   const j = i + 1;
-                  const isPlayed = data.journeys?.some(item => item.journey === j && item.completed);
+                  const jRec = data.journeys?.find(item => item.journey === j);
+                  const statusLabel = jRec?.status === 'paused'
+                    ? '(Pausada / Aplazada)'
+                    : jRec?.completed
+                    ? '(Ya registrada)'
+                    : '(Pendiente)';
                   return (
                     <option key={j} value={j}>
-                      Jornada {j} {isPlayed ? '(Ya registrada)' : '(Pendiente)'}
+                      Jornada {j} {statusLabel}
                     </option>
                   );
                 })}
@@ -380,111 +400,171 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
             </div>
           </div>
 
-          {/* 4 Penalty Selectors */}
-          <div className="space-y-3 pt-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
-              Asignar Sanciones (Total: 6.50€)
-            </h4>
-
-            {/* 9th */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-red-500/20 gap-4">
-              <div className="flex items-center gap-2.5 min-w-36">
-                <span className="w-6 h-6 rounded-md bg-red-500/20 text-red-400 flex items-center justify-center text-xs font-bold">
-                  9º
-                </span>
-                <div>
-                  <strong className="text-xs text-slate-200 block">Último</strong>
-                  <span className="text-[11px] text-red-400">3.00€</span>
-                </div>
-              </div>
-              <select
-                value={pos9}
-                onChange={(e) => setPos9(e.target.value)}
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-red-400"
-              >
-                <option value="">-- Seleccionar jugador --</option>
-                {participants.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
-                ))}
-              </select>
+          {/* Type of Journey: Normal vs Paused */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-900 border border-slate-700">
+            <div>
+              <span className="text-xs font-bold text-slate-200 block">Tipo de Registro</span>
+              <span className="text-[11px] text-slate-400">Selecciona si la fecha se jugó completa o tiene partidos suspendidos</span>
             </div>
-
-            {/* 8th */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-orange-500/20 gap-4">
-              <div className="flex items-center gap-2.5 min-w-36">
-                <span className="w-6 h-6 rounded-md bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">
-                  8º
-                </span>
-                <div>
-                  <strong className="text-xs text-slate-200 block">Penúltimo</strong>
-                  <span className="text-[11px] text-orange-400">2.00€</span>
-                </div>
-              </div>
-              <select
-                value={pos8}
-                onChange={(e) => setPos8(e.target.value)}
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-orange-400"
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setIsPaused(false)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  !isPaused
+                    ? 'bg-amber-400 text-slate-950 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
               >
-                <option value="">-- Seleccionar jugador --</option>
-                {participants.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* 7th */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-amber-500/20 gap-4">
-              <div className="flex items-center gap-2.5 min-w-36">
-                <span className="w-6 h-6 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">
-                  7º
-                </span>
-                <div>
-                  <strong className="text-xs text-slate-200 block">Antepenúltimo</strong>
-                  <span className="text-[11px] text-amber-400">1.00€</span>
-                </div>
-              </div>
-              <select
-                value={pos7}
-                onChange={(e) => setPos7(e.target.value)}
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-amber-400"
+                Regular (Finalizada)
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsPaused(true)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  isPaused
+                    ? 'bg-amber-500 text-slate-950 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
               >
-                <option value="">-- Seleccionar jugador --</option>
-                {participants.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* 6th */}
-            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-700 gap-4">
-              <div className="flex items-center gap-2.5 min-w-36">
-                <span className="w-6 h-6 rounded-md bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold">
-                  6º
-                </span>
-                <div>
-                  <strong className="text-xs text-slate-200 block">Sexto</strong>
-                  <span className="text-[11px] text-slate-400">0.50€</span>
-                </div>
-              </div>
-              <select
-                value={pos6}
-                onChange={(e) => setPos6(e.target.value)}
-                className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-slate-400"
-              >
-                <option value="">-- Seleccionar jugador --</option>
-                {participants.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
-                ))}
-              </select>
+                <PauseCircle className="w-3.5 h-3.5" />
+                <span>Pausar (Aplazado)</span>
+              </button>
             </div>
           </div>
+
+          {isPaused ? (
+            /* Paused Journey Form */
+            <div className="space-y-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+              <div className="flex items-center gap-2 text-amber-300 font-bold text-xs">
+                <PauseCircle className="w-4 h-4" />
+                <span>Jornada en Pausa: Sanciones congeladas a 0.00€</span>
+              </div>
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-300 block mb-1.5">
+                  Motivo del aplazamiento
+                </label>
+                <input
+                  type="text"
+                  value={pausedReason}
+                  onChange={(e) => setPausedReason(e.target.value)}
+                  placeholder="Ej. Partido aplazado pendiente de disputa..."
+                  className="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-surface-border text-sm text-slate-100 focus:outline-none focus:border-amber-400"
+                />
+              </div>
+              <p className="text-[11px] text-slate-300">
+                Al pausar la jornada, ningún participante recibirá sanciones de momento ni se alterará el bote ni el ranking hasta que se juegue el partido pendiente.
+              </p>
+            </div>
+          ) : (
+            /* 4 Penalty Selectors */
+            <div className="space-y-3 pt-2">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+                Asignar Sanciones (Total: 6.50€)
+              </h4>
+
+              {/* 9th */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-red-500/20 gap-4">
+                <div className="flex items-center gap-2.5 min-w-36">
+                  <span className="w-6 h-6 rounded-md bg-red-500/20 text-red-400 flex items-center justify-center text-xs font-bold">
+                    9º
+                  </span>
+                  <div>
+                    <strong className="text-xs text-slate-200 block">Último</strong>
+                    <span className="text-[11px] text-red-400">3.00€</span>
+                  </div>
+                </div>
+                <select
+                  value={pos9}
+                  onChange={(e) => setPos9(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-red-400"
+                >
+                  <option value="">-- Seleccionar jugador --</option>
+                  {participants.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 8th */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-orange-500/20 gap-4">
+                <div className="flex items-center gap-2.5 min-w-36">
+                  <span className="w-6 h-6 rounded-md bg-orange-500/20 text-orange-400 flex items-center justify-center text-xs font-bold">
+                    8º
+                  </span>
+                  <div>
+                    <strong className="text-xs text-slate-200 block">Penúltimo</strong>
+                    <span className="text-[11px] text-orange-400">2.00€</span>
+                  </div>
+                </div>
+                <select
+                  value={pos8}
+                  onChange={(e) => setPos8(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-orange-400"
+                >
+                  <option value="">-- Seleccionar jugador --</option>
+                  {participants.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 7th */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-amber-500/20 gap-4">
+                <div className="flex items-center gap-2.5 min-w-36">
+                  <span className="w-6 h-6 rounded-md bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs font-bold">
+                    7º
+                  </span>
+                  <div>
+                    <strong className="text-xs text-slate-200 block">Antepenúltimo</strong>
+                    <span className="text-[11px] text-amber-400">1.00€</span>
+                  </div>
+                </div>
+                <select
+                  value={pos7}
+                  onChange={(e) => setPos7(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-amber-400"
+                >
+                  <option value="">-- Seleccionar jugador --</option>
+                  {participants.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* 6th */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-700 gap-4">
+                <div className="flex items-center gap-2.5 min-w-36">
+                  <span className="w-6 h-6 rounded-md bg-slate-800 text-slate-300 flex items-center justify-center text-xs font-bold">
+                    6º
+                  </span>
+                  <div>
+                    <strong className="text-xs text-slate-200 block">Sexto</strong>
+                    <span className="text-[11px] text-slate-400">0.50€</span>
+                  </div>
+                </div>
+                <select
+                  value={pos6}
+                  onChange={(e) => setPos6(e.target.value)}
+                  className="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-surface-border text-xs text-slate-100 focus:outline-none focus:border-slate-400"
+                >
+                  <option value="">-- Seleccionar jugador --</option>
+                  {participants.map(p => (
+                    <option key={p.id} value={p.id}>{p.name} {p.fantasyName ? `(${p.fantasyName})` : ''}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
 
           {/* Validation indicator */}
           {!isComplete ? (
             <div className="flex items-center gap-2 text-xs text-amber-400 bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>
-                {hasDuplicates
+                {isPaused
+                  ? 'Introduce el motivo del aplazamiento de la jornada.'
+                  : hasDuplicates
                   ? 'No puedes seleccionar al mismo jugador en varias posiciones.'
                   : `Faltan seleccionar ${4 - selected.length} puestos para completar la jornada.`}
               </span>
@@ -492,7 +572,11 @@ export const JourneySnippetGenerator: React.FC<JourneySnippetGeneratorProps> = (
           ) : (
             <div className="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20">
               <Check className="w-4 h-4 flex-shrink-0" />
-              <span>Jornada lista: 3.00€ + 2.00€ + 1.00€ + 0.50€ = 6.50€ exactos.</span>
+              <span>
+                {isPaused
+                  ? 'Jornada pausada lista: Sanciones congeladas (0€) y motivo registrado.'
+                  : 'Jornada lista: 3.00€ + 2.00€ + 1.00€ + 0.50€ = 6.50€ exactos.'}
+              </span>
             </div>
           )}
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PauseCircle } from 'lucide-react';
 import initialLeagueData from '../data/fantasy_data.json';
 import { LeagueData, ParticipantStats } from './types/fantasy';
 import { DataService } from './services/dataService';
@@ -53,6 +54,32 @@ export const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-6 sm:space-y-8 pb-24 md:pb-8">
+
+        {/* Paused Journeys Alert Banner */}
+        {stats.globalStats.pausedJourneys && stats.globalStats.pausedJourneys.length > 0 && (
+          <div className="rounded-2xl bg-amber-500/10 border border-amber-500/30 p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center shrink-0">
+                <PauseCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <strong className="text-xs sm:text-sm font-bold text-amber-200 block">
+                  Jornada {stats.globalStats.pausedJourneys.join(', ')} pausada por partido aplazado
+                </strong>
+                <p className="text-[11px] sm:text-xs text-amber-300/80 mt-0.5">
+                  Las sanciones están temporalmente congeladas y no computan en el bote hasta que se disputen los partidos pendientes.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setActiveTab('journeys')}
+              className="hidden sm:inline-flex px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition-colors shrink-0"
+            >
+              Ver detalle
+            </button>
+          </div>
+        )}
+
 
         {activeTab === 'dashboard' && (
           <div className="space-y-6 sm:space-y-8 animate-fade-in">

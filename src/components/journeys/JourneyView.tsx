@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Calendar, Grid, CheckCircle2, Clock, ArrowUpDown, ArrowDown, ArrowUp } from 'lucide-react';
+import { Table, Calendar, Grid, CheckCircle2, Clock, ArrowUpDown, ArrowDown, ArrowUp, PauseCircle } from 'lucide-react';
 import { LeagueData, CalculatedStats } from '../../types/fantasy';
 
 interface JourneyViewProps {
@@ -155,14 +155,31 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                     </th>
                     {Array.from({ length: totalJourneys }, (_, i) => {
                       const jNum = i + 1;
-                      const isPlayed = data.journeys?.some(j => j.journey === jNum && j.completed);
+                      const jRec = data.journeys?.find(j => j.journey === jNum);
+                      const isPlayed = jRec && jRec.completed && jRec.status !== 'paused';
+                      const isPaused = jRec && jRec.status === 'paused';
                       return (
                         <th
                           key={i}
-                          className={`py-3 px-1.5 text-center min-w-[38px] sm:min-w-[42px] font-mono font-bold ${isPlayed ? 'text-white bg-slate-850' : 'text-slate-500 bg-slate-950/60'
-                            }`}
+                          className={`py-2.5 px-1.5 text-center min-w-[38px] sm:min-w-[44px] font-mono font-bold ${
+                            isPaused
+                              ? 'text-amber-300 bg-amber-500/15 border-b-2 border-amber-400'
+                              : isPlayed
+                              ? 'text-white bg-slate-850'
+                              : 'text-slate-500 bg-slate-950/60'
+                          }`}
+                          title={isPaused ? `Jornada ${jNum} Pausada: ${jRec?.pausedReason || 'Partido aplazado'}` : undefined}
                         >
-                          <span className={isPlayed ? 'text-amber-300 font-black' : ''}>J{jNum}</span>
+                          <div className="flex flex-col items-center">
+                            <span className={isPlayed ? 'text-amber-300 font-black' : isPaused ? 'text-amber-300 font-black' : ''}>
+                              J{jNum}
+                            </span>
+                            {isPaused && (
+                              <span className="text-[8px] font-sans px-1 rounded bg-amber-500/30 text-amber-200 mt-0.5">
+                                PAUSA
+                              </span>
+                            )}
+                          </div>
                         </th>
                       );
                     })}
@@ -206,13 +223,23 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                         {Array.from({ length: totalJourneys }, (_, i) => {
                           const jNum = i + 1;
                           const jRec = data.journeys?.find(j => j.journey === jNum);
-                          const amt = jRec?.completed ? Number(jRec.penalties?.[p.id] || 0) : null;
+                          const isPaused = jRec && jRec.status === 'paused';
+                          const amt = (jRec?.completed && !isPaused) ? Number(jRec.penalties?.[p.id] || 0) : null;
 
                           let cellBadge = (
                             <span className="text-slate-600 select-none text-[11px] font-bold">·</span>
                           );
 
-                          if (amt !== null) {
+                          if (isPaused) {
+                            cellBadge = (
+                              <span
+                                className="inline-block px-1 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold cursor-help"
+                                title={`Jornada pausada: ${jRec?.pausedReason || 'Partido aplazado'}`}
+                              >
+                                ⏸️
+                              </span>
+                            );
+                          } else if (amt !== null) {
                             if (amt === 0) {
                               cellBadge = (
                                 <span className="inline-block w-5 h-5 leading-5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-black">
@@ -247,7 +274,7 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
                           }
 
                           return (
-                            <td key={i} className="py-2 px-1 text-center font-mono align-middle">
+                            <td key={i} className={`py-2 px-1 text-center font-mono align-middle ${isPaused ? 'bg-amber-950/10' : ''}`}>
                               {cellBadge}
                             </td>
                           );
@@ -267,22 +294,29 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
           <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
             {Array.from({ length: totalJourneys }, (_, i) => {
               const jNum = i + 1;
-              const isPlayed = data.journeys?.some(j => j.journey === jNum && j.completed);
+              const jRec = data.journeys?.find(j => j.journey === jNum);
+              const isPlayed = jRec && jRec.completed && jRec.status !== 'paused';
+              const isPaused = jRec && jRec.status === 'paused';
               const isSelected = selectedJourneyNum === jNum;
 
               return (
                 <button
                   key={jNum}
                   onClick={() => setSelectedJourneyNum(jNum)}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${isSelected
-                    ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 font-black scale-105'
-                    : isPlayed
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all ${
+                    isSelected
+                      ? 'bg-amber-400 text-slate-950 shadow-md shadow-amber-500/20 font-black scale-105'
+                      : isPaused
+                      ? 'bg-amber-500/15 text-amber-300 border border-amber-500/40 hover:bg-amber-500/25'
+                      : isPlayed
                       ? 'bg-slate-800 text-white border border-slate-700 hover:border-slate-500'
                       : 'bg-slate-900/60 text-slate-400 border border-slate-800 hover:text-slate-200'
-                    }`}
+                  }`}
                 >
                   <span>J{jNum}</span>
-                  {isPlayed ? (
+                  {isPaused ? (
+                    <PauseCircle className={`w-3.5 h-3.5 ${isSelected ? 'text-slate-950' : 'text-amber-400'}`} />
+                  ) : isPlayed ? (
                     <CheckCircle2 className={`w-3.5 h-3.5 ${isSelected ? 'text-slate-950' : 'text-emerald-400'}`} />
                   ) : (
                     <Clock className="w-3.5 h-3.5 text-slate-500" />
@@ -297,7 +331,11 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
             <div className="flex items-center justify-between border-b border-slate-700 pb-4 mb-6">
               <div>
                 <span className="text-xs font-black uppercase tracking-wider text-amber-300">
-                  {selectedJourney?.completed ? 'Jornada Finalizada' : 'Jornada Pendiente'}
+                  {selectedJourney?.status === 'paused'
+                    ? '⏸️ Jornada Pausada / Partido Aplazado'
+                    : selectedJourney?.completed
+                    ? 'Jornada Finalizada'
+                    : 'Jornada Pendiente'}
                 </span>
                 <h3 className="font-display text-2xl font-black text-white">
                   Jornada {selectedJourneyNum}
@@ -306,12 +344,32 @@ export const JourneyView: React.FC<JourneyViewProps> = ({ data, stats }) => {
               <div className="text-right">
                 <span className="text-xs text-slate-300 font-medium block">Bote de la Fecha</span>
                 <span className="font-display text-2xl font-black text-amber-300">
-                  {selectedJourney?.completed ? '6.50€' : '0.00€'}
+                  {selectedJourney?.completed && selectedJourney?.status !== 'paused' ? '6.50€' : '0.00€'}
                 </span>
+                {selectedJourney?.status === 'paused' && (
+                  <span className="text-[10px] text-amber-400 font-bold block">En pausa</span>
+                )}
               </div>
             </div>
 
-            {selectedJourney?.completed ? (
+            {selectedJourney?.status === 'paused' ? (
+              <div className="py-8 px-4 sm:px-8 text-center space-y-4 rounded-2xl bg-slate-900/80 border border-amber-500/30">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center mx-auto">
+                  <PauseCircle className="w-7 h-7 text-amber-400" />
+                </div>
+                <div className="max-w-md mx-auto">
+                  <h4 className="font-display text-lg font-bold text-white">
+                    Jornada Pausada por Partido Aplazado
+                  </h4>
+                  <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                    {selectedJourney.pausedReason || 'Esta jornada tiene partidos pendientes de disputa. Las sanciones quedan temporalmente congeladas hasta su resolución.'}
+                  </p>
+                  <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs font-bold text-amber-300">
+                    <span>🛡️ Sanciones: 0.00€ para todos hasta disputarse el encuentro</span>
+                  </div>
+                </div>
+              </div>
+            ) : selectedJourney?.completed ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Penalties List - Sorted from highest to lowest */}
                 <div className="space-y-2.5">

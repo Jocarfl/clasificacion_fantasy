@@ -15,7 +15,8 @@ export class DataService {
    */
   static calculateStats(data: LeagueData): CalculatedStats {
     const participants = data.participants || [];
-    const journeys = (data.journeys || []).filter(j => j.completed);
+    const journeys = (data.journeys || []).filter(j => j.completed && j.status !== 'paused');
+    const pausedJourneys = (data.journeys || []).filter(j => j.status === 'paused').map(j => j.journey);
     const totalJourneysCount = data.totalJourneys || 38;
     const fixedJourneyPot = data.rules?.journeyPot || 6.50;
     const estimatedFinalPot = data.rules?.estimatedFinalPot || (totalJourneysCount * fixedJourneyPot);
@@ -198,7 +199,8 @@ export class DataService {
       totalPendingCollection,
       leader: leader ? { name: leader.name, amount: leader.totalPaid, avatar: leader.avatar } : null,
       ratas: ratas.map(r => ({ name: r.name, amount: r.totalPaid, avatar: r.avatar })),
-      lastUpdatedJourney: computedJourneys > 0 ? journeys[journeys.length - 1].journey : 0
+      lastUpdatedJourney: computedJourneys > 0 ? journeys[journeys.length - 1].journey : 0,
+      pausedJourneys
     };
 
     return {
@@ -221,7 +223,15 @@ export class DataService {
     text += `💰 *CONTROL DE MULTAS Y BOTE*\n`;
     text += `─────────────────────────\n\n`;
 
-    if (specificJourney) {
+    const rawJourney = data.journeys?.find(j => j.journey === jNum);
+
+    if (rawJourney?.status === 'paused') {
+      text += `⏸️ *JORNADA ${jNum} PAUSADA POR PARTIDO APLAZADO*\n`;
+      if (rawJourney.pausedReason) {
+        text += `ℹ️ _${rawJourney.pausedReason}_\n`;
+      }
+      text += `Las sanciones y multas quedan temporalmente congeladas hasta que se dispute el encuentro pendiente.\n\n`;
+    } else if (specificJourney) {
       text += `📅 *MULTAS JORNADA ${jNum}*\n`;
       const penaltiesList: { name: string; fantasyName?: string; amount: number; label: string }[] = [];
       Object.entries(specificJourney.penalties).forEach(([id, amt]) => {
@@ -260,6 +270,9 @@ export class DataService {
     });
 
     text += `\n📊 *BOTE ACUMULADO:* ${globalStats.totalPot.toFixed(2)}€ / ${globalStats.estimatedFinalPot.toFixed(0)}€ (${globalStats.progressPercent.toFixed(1)}%)\n`;
+    if (globalStats.pausedJourneys.length > 0) {
+      text += `⚠️ *Nota:* Jornada ${globalStats.pausedJourneys.join(', ')} pausada por partido aplazado (sanciones congeladas).\n`;
+    }
     text += `\n🌐 https://jocarfl.github.io/clasificacion_fantasy/\n`;
 
     return text;
@@ -315,11 +328,19 @@ export class DataService {
   /**
    * Generates a clean formatted JSON snippet for a journey ready to paste in GitHub.
    */
-  static generateJourneyJsonSnippet(journeyNum: number, penalties: Record<string, number>, dateStr: string): string {
+  static generateJourneyJsonSnippet(
+    journeyNum: number,
+    penalties: Record<string, number>,
+    dateStr: string,
+    isPaused: boolean = false,
+    pausedReason: string = ''
+  ): string {
     const record: JourneyRecord = {
       journey: journeyNum,
       date: dateStr || new Date().toISOString().split('T')[0],
-      completed: true,
+      completed: !isPaused,
+      status: isPaused ? 'paused' : 'completed',
+      ...(isPaused && pausedReason ? { pausedReason } : {}),
       penalties
     };
     return JSON.stringify(record, null, 2);
