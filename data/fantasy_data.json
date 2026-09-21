@@ -187,6 +187,23 @@
         "manu": 0,
         "sanfe": 0
       }
+    },
+    {
+      "journey": 7,
+      "date": "2026-09-21",
+      "completed": true,
+      "status": "completed",
+      "penalties": {
+        "joan": 0,
+        "pablo": 0,
+        "david": 1,
+        "josep": 0.5,
+        "ruben": 3,
+        "jordi": 2,
+        "xarly": 0,
+        "manu": 0,
+        "sanfe": 0
+      }
     }
   ],
   "settlements": [
