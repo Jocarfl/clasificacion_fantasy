@@ -172,20 +172,19 @@
     },
     {
       "journey": 6,
-      "date": "2026-09-20",
-      "completed": false,
-      "status": "paused",
-      "pausedReason": "Partido aplazado pendiente de disputa. Sanciones congeladas hasta su resolución.",
+      "date": "2026-10-28",
+      "completed": true,
+      "status": "completed",
       "penalties": {
         "joan": 0,
-        "pablo": 0,
+        "pablo": 2,
         "david": 0,
-        "josep": 0,
+        "josep": 0.5,
         "ruben": 0,
-        "jordi": 0,
+        "jordi": 3,
         "xarly": 0,
         "manu": 0,
-        "sanfe": 0
+        "sanfe": 1
       }
     },
     {
