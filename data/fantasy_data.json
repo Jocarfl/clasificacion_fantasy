@@ -332,15 +332,15 @@
       "startJourney": 9,
       "endJourney": 12,
       "paidStatus": {
-        "joan": false,
-        "pablo": false,
+        "joan": true,
+        "pablo": true,
         "david": false,
-        "josep": false,
-        "ruben": false,
-        "jordi": false,
+        "josep": true,
+        "ruben": true,
+        "jordi": true,
         "xarly": false,
-        "manu": false,
-        "sanfe": false
+        "manu": true,
+        "sanfe": true
       }
     },
     {
